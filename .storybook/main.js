@@ -8,11 +8,14 @@ const config = {
     "@storybook/addon-essentials",
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
+    '@storybook/addon-essentials', '@ergosign/storybook-addon-pseudo-states',
   ],
   framework: {
     name: "@storybook/react-webpack5",
     options: {},
   },
   staticDirs: ["..\\public"],
+  
 };
 export default config;
+
