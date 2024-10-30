@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192.93" height="133.785" viewBox="0 0 192.93 133.785">
+  <g id="controle" transform="translate(-111.734 -109.623)">
+    <path id="União_1" data-name="União 1" d="M-66.794-1244.616a31.035,31.035,0,0,0-16.5-4.75h-47a21.135,21.135,0,0,0-12.5,6.5c-5.75,6-33,33-34.5,33.5s-29.25-3-16.249-43.75,19.75-59.251,19.75-59.251,1.386-4.919,10.715-9.259v-6.562s19.857-9.857,28.571-5.857c5.3,2.434,9.76,4.551,13.434,5.932,11.4.06,21.772.11,31.1.37,5.2-1.655,13.749-4.545,15.9-6.3,3.143-2.571,27.572,2.857,29.428,5.857a60.547,60.547,0,0,1,.148,7.207,26.391,26.391,0,0,1,10.959,8.614c6.25,19.25,39.251,89.751,8.5,103a21.7,21.7,0,0,1-2.375.158C-34.1-1209.208-35.953-1214.453-66.794-1244.616Z" transform="translate(312.794 1448.616)" stroke="#000" stroke-linecap="round" stroke-width="8"/>
+    <path id="Caminho_1384" data-name="Caminho 1384" d="M149.714,128.286v-7.857s19.857-9.857,28.571-5.857,15.143,7.143,19.571,7.571,20.857,0,20.857,0,16.857-5,20-7.571,27.571,2.857,29.429,5.857a70.971,70.971,0,0,1,0,10.143L149.714,129" fill="#2b2b2b"/>
+    <path id="Caminho_1383" data-name="Caminho 1383" d="M135.5,239.25c-1.5.5-29.25-3-16.25-43.75S139,136.25,139,136.25s4.5-16,52-15.75,77.25.25,88.25,15.75c6.25,19.25,39.25,89.75,8.5,103-9,1-7.583-1.833-41.75-35.25a31.036,31.036,0,0,0-16.5-4.75h-47a21.136,21.136,0,0,0-12.5,6.5C164.25,211.75,137,238.75,135.5,239.25Z" fill="#383838"/>
+    <circle id="Elipse_53" data-name="Elipse 53" cx="10" cy="10" r="10" transform="translate(150 140)" fill="#757575"/>
+    <circle id="Elipse_54" data-name="Elipse 54" cx="10" cy="10" r="10" transform="translate(222 173)" fill="#757575"/>
+    <circle id="Elipse_55" data-name="Elipse 55" cx="7" cy="7" r="7" transform="translate(202 140)" fill="#fff"/>
+    <circle id="Elipse_56" data-name="Elipse 56" cx="5" cy="5" r="5" transform="translate(234 145)" fill="#3a96dd"/>
+    <circle id="Elipse_57" data-name="Elipse 57" cx="5" cy="5" r="5" transform="translate(247 132)" fill="#fce100"/>
+    <circle id="Elipse_58" data-name="Elipse 58" cx="5" cy="5" r="5" transform="translate(260 145)" fill="#f03a17"/>
+    <circle id="Elipse_59" data-name="Elipse 59" cx="5" cy="5" r="5" transform="translate(247 158)" fill="#16c60c"/>
+    <g id="Grupo_2076" data-name="Grupo 2076">
+      <path id="Caminho_1385" data-name="Caminho 1385" d="M0,0,3.406-.687,7,0V19l-3.594.906L0,19Z" transform="translate(176 173)" fill="#757575"/>
+      <path id="Caminho_1386" data-name="Caminho 1386" d="M0,0,3.406-.687,7,0V19l-3.594.906L0,19Z" transform="translate(189.109 179.109) rotate(90)" fill="#757575"/>
+    </g>
+  </g>
+</svg>
