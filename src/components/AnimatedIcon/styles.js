@@ -3,18 +3,18 @@
 import styled, { keyframes } from 'styled-components';
 
 const sway = keyframes`
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(0); }
-  75% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-8px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(8px); }
+  100% { transform: translateY(0); }
 `;
 
 export const StyledIcon = styled.div`
   display: block;
   margin: 0 auto 20px; /* Centraliza o ícone e adiciona margem inferior */
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 100px;
 
   svg {
     width: 100%;
