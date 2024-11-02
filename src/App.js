@@ -1,16 +1,10 @@
+// src/App.js
+
 import React from 'react';
-import CTAButton from './components/CTAButton';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const handleClick = () => {
-    alert('Botão clicado!');
-  };
-
-  return (
-    <div className="App">
-      <CTAButton text="Clique Aqui" onClick={handleClick} />
-    </div>
-  );
+  return <HomePage />;
 }
 
 export default App;

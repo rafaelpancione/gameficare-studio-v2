@@ -2,13 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  BubbleContainer,
-  BubbleContent,
-  BubbleTail,
-  SliderDots,
-  Dot,
-} from './styles';
+import { BubbleContainer, BubbleContent, SliderDots, Dot } from './styles';
+import { ReactComponent as SpeechBubbleSVG } from '../../assets/images/speech-bubble.svg';
 
 /**
  * Componente de Balão de Diálogo com Slider Opcional
@@ -43,9 +38,11 @@ const SpeechBubble = ({ texts, slider }) => {
 
   return (
     <BubbleContainer>
-      <BubbleContent aria-live="polite">
-        {texts[slider ? currentIndex : 0]}
-        <BubbleTail />
+      <BubbleContent>
+        <SpeechBubbleSVG className="speech-bubble-svg" />
+        <div className="text-content" aria-live="polite">
+          {texts[slider ? currentIndex : 0]}
+        </div>
       </BubbleContent>
       {slider && (
         <SliderDots>

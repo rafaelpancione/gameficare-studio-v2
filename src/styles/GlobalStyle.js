@@ -1,9 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  /* Importação das fontes */
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
-
+  
   :root {
     /* Paleta de cores */
     --red: #F6282C;

@@ -11,8 +11,8 @@ export const Button = styled.button`
   border: 2px solid #000;
   border-radius: 8px;
   padding: ${({ size }) => {
-    if (size === 'small') return '10px 20px';
-    if (size === 'large') return '20px 40px';
+    if (size === 'small') return '20px 20px';
+    if (size === 'large') return '30px 40px';
     return '15px 30px'; // tamanho médio padrão
   }};
   font-size: ${({ size }) => {

@@ -34,4 +34,3 @@ CTAButton.defaultProps = {
 };
 
 export default CTAButton;
-
