@@ -1,6 +1,6 @@
 // src/components/Header/index.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; // Adicione novamente useState e useEffect
 import PropTypes from 'prop-types';
 import {
   HeaderContainer,
@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from './styles';
-//import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import logoSvg from '../../assets/images/logo.svg';
 
 /**
@@ -21,6 +21,7 @@ import logoSvg from '../../assets/images/logo.svg';
  * @param {string} tooltipText - Texto a ser exibido no tooltip do logo.
  */
 const Header = ({ menuItems = [], tooltipText = '' }) => {
+  // Reintroduza o estado scrolled
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -59,7 +60,5 @@ Header.propTypes = {
   ).isRequired,
   tooltipText: PropTypes.string,
 };
-
-
 
 export default Header;

@@ -11,14 +11,15 @@ const sway = keyframes`
 `;
 
 export const StyledIcon = styled.div`
-  display: block;
-  margin: 0 auto 20px; /* Centraliza o ícone e adiciona margem inferior */
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
+  display: flex; /* Adicionado */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
 
   svg {
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: auto;
     animation: ${sway} 5s ease-in-out infinite;
   }
 `;

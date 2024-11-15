@@ -11,7 +11,15 @@ import GlobalStyle from '../styles/GlobalStyle';
 //Importar as imagens necessárias
 import logoSvg from '../assets/images/logo-texto.svg';
 import moonSvg from '../assets/images/moon.svg';
+import { ReactComponent as ControleSvg } from '../assets/images/controle.svg';
+import { ReactComponent as RocketSvg } from '../assets/images/rocket.svg';
+import { ReactComponent as BusinessSvg } from '../assets/images/business.svg';
 import characterSvg from '../assets/images/character.svg';
+import InfoCard from '../components/InfoCard';
+import planet1Svg from '../assets/images/planet1.svg';
+import planet2Svg from '../assets/images/planet2.svg';
+import character1Svg from '../assets/images/character1.svg';
+import AnimatedIcon from '../components/AnimatedIcon';
 
 // Animação de balanço
 const swingAnimation = keyframes`
@@ -31,6 +39,20 @@ const swingAnimation = keyframes`
     transform: translateY(0) rotate(0deg);
   }
 `;
+
+// Animação de balanço para os planetas
+const planetSwingAnimation = keyframes`
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+`;
+
 
 // Estilos dos componentes
 const MainContainer = styled.div`
@@ -119,6 +141,58 @@ const CharacterImage = styled.img`
   }
 `;
 
+// Estilos NOSSOS SERVIÇOS
+
+const ServicesSection = styled.section`
+  padding: 80px 20px;
+  position: relative;
+`;
+
+const SectionTitle = styled.div`
+  position: relative;
+  text-align: center;
+  margin-bottom: 60px;
+
+  h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+const PlanetImage = styled.img`
+  position: absolute;
+  top: 0; /* Ajuste conforme necessário */
+  right: 10%; /* Aproximar do CardsContainer */
+  width: 200px;
+  z-index: 0;
+  animation: ${planetSwingAnimation} 5s infinite ease-in-out;
+`;
+
+const CardsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const BottomPlanetImage = styled.img`
+  position: absolute;
+  bottom: -30px; /* Ajuste para aproximar dos InfoCards */
+  left: 10%; /* Aproximar do CardsContainer */
+  width: 150px;
+  z-index: 0;
+  animation: ${planetSwingAnimation} 5s infinite ease-in-out reverse;
+`;
+
 function HomePage() {
   return (
     <>
@@ -149,6 +223,33 @@ function HomePage() {
           <CharacterImage src={characterSvg} alt="Personagem na Nave" />
         </RightSide>
       </MainContainer>
+      
+      <ServicesSection>
+      <SectionTitle>
+          <h2>NOSSOS SERVIÇOS</h2>
+          <PlanetImage src={planet1Svg} alt="Planeta" />
+        </SectionTitle>
+      <CardsContainer>
+          <InfoCard
+            icon={ControleSvg}
+            title="DESENVOLVIMENTO DE JOGOS"
+            description="Criação de jogos multi-plataforma para jogadores casuais ou até mesmo desenvolvimento de serious games."
+          />
+          <InfoCard
+            icon={RocketSvg}
+            title="GAMEFICAÇÃO"
+            description="Soluções gamificadas para engajar clientes ou aumentar a produtividade em empresas dos diversos segmentos."
+          />
+          <InfoCard
+            icon={BusinessSvg}
+            title="SOLUÇÕES B2B"
+            description="Da ideia ao lançamento, transformamos sua visão em experiências digitais inesquecíveis!"
+          />
+        </CardsContainer>
+
+        <BottomPlanetImage src={planet2Svg} alt="Planeta" />
+      </ServicesSection>
+    
       <Footer />
     </>
   );

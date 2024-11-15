@@ -1,21 +1,17 @@
 // src/components/Header/styles.js
 
 import styled from 'styled-components';
-//import { Link } from 'react-router-dom';
 
 export const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: ${({ $scrolled }) => ($scrolled ? 'var(--dark-blue)' : 'transparent')};
+  background-color: ${({ $scrolled }) =>
+    $scrolled ? 'rgba(0, 0, 0, 0.2)' : 'transparent'};
+  box-shadow: ${({ $scrolled }) =>
+    $scrolled ? '0 2px 4px rgba(0, 0, 0, 0.2)' : 'none'};
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 1000;
-  transition: box-shadow 0.3s ease-in-out;
-
-  ${({ scrolled }) =>
-    scrolled &&
-    `
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  `}
 `;
 
 export const HeaderContent = styled.div`
