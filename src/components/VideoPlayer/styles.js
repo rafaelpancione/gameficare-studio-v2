@@ -4,15 +4,21 @@ import styled from 'styled-components';
 
 export const VideoContainer = styled.div`
   position: relative;
-  padding-bottom: 56.25%; /* Mantém a proporção 16:9 */
-  height: 0;
+  width: 100%;
+  max-width: 1000px; /* Reduzimos de 800px para 600px */
+  margin: 0 auto;
   overflow: hidden;
   border: 2px solid #000;
   border-radius: 5px;
   box-shadow: 5px 5px 0 #000;
   background-color: #000;
-`;
 
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; /* Mantém a proporção 16:9 */
+  }
+`;
 export const VideoFrame = styled.iframe`
   position: absolute;
   top: 0;
