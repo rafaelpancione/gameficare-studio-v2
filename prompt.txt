@@ -1,0 +1,134 @@
+Irei te fornecer os principais arquivos do site e descrever toda estrutura do projeto para que você tenha total conhecimento e possa fazer a proposta de Refatoração. Sendo assim, em anexo estou fornecendo 4 arquivos das páginas do projeto que estão no diretório "src/pages/". Dentro do diretório "src" possui outras pastas importantes para o projeto. São elas "assets", onde estão armazenados arquivos de fontes, icones e imagens em suas respectivas pastas, "fonts", "icons" e  "images". Ainda dentro da pasta "src" temos as pastas, "components" e "styles", a primeira por sua vez armazena várias pastas, cada uma com o nome de um componente. Já a pasta "styles" armazena um único arquivo chamado "GlobalStyle", que possui a função que o próprio nome já diz e também está anexado a este prompt. Deste modo, baseado em todo nosso contexto de como você pode transformar meu projeto em uma aplicação moderna, consistente e com uma excelente experiência de usuário, refatore o código para melhorar a organização, performance e escalabilidade, garante que a refatoração também foque na consistência visual e na harmonização do design, seguindo princípios de UX (User Experience) e UI (User Interface). Isso inclui:
+
+Consistência Visual:
+
+Padronização de tamanhos de textos, títulos, botões, inputs e outros elementos visuais.
+
+Uso de uma escala tipográfica consistente (ex: h1, h2, h3, p, etc.).
+
+Espaçamentos uniformes (margens e paddings) com base em um sistema de espaçamento (ex: 8px, 16px, 24px).
+
+Harmonização do Design:
+
+Garantir que todas as páginas sigam a mesma estética e identidade visual.
+
+Ajustar cores, sombras, bordas e outros estilos para manter um visual coeso.
+
+Verificar a hierarquia visual (o que deve chamar mais atenção e o que deve ser secundário).
+
+Melhorias de UX:
+
+Melhorar a usabilidade, garantindo que os elementos interativos (botões, links, formulários) sejam intuitivos.
+
+Garantir feedback visual para ações do usuário (ex: hover, focus, loading states).
+
+Simplificar fluxos de navegação e reduzir a complexidade das interfaces.
+
+UI Moderna e Responsiva:
+
+Aplicar um design moderno, seguindo tendências atuais (ex: minimalismo, dark mode, microinterações).
+
+Garantir que o layout seja responsivo e funcione bem em diferentes dispositivos (mobile, tablet, desktop).
+
+Ferramentas e Bibliotecas:
+
+Utilizar bibliotecas como TailwindCSS ou Styled Components para facilitar a manutenção e consistência dos estilos.
+
+Implementar um design system ou um guia de estilo para garantir que todos os componentes sigam os mesmos padrões.
+
+Como Você deve garantir a Consistência Visual e UX/UI:
+
+Análise do Design Atual:
+
+Revise o design atual do projeto, identificando inconsistências visuais (ex: tamanhos de fontes diferentes, cores desalinhadas, espaçamentos desproporcionais).
+
+Verifique se o layout segue boas práticas de UX, como alinhamento, contraste e hierarquia visual.
+
+Criação de um Guia de Estilo:
+
+Se não houver um guia de estilo, crie um com base no design atual, definindo:
+
+Cores primárias, secundárias e de feedback (erro, sucesso, alerta).
+
+Escala tipográfica (tamanhos de fontes para títulos, subtítulos, textos, etc.).
+
+Espaçamentos (margens, paddings, gaps).
+
+Estilos de botões, inputs, cards e outros componentes.
+
+Refatoração dos Estilos:
+
+Refatore os estilos CSS (ou a biblioteca de estilos utilizada) para seguir o guia de estilo criado.
+
+Garanta que todos os componentes compartilhem os mesmos estilos base, evitando duplicação de código.
+
+Componentização:
+
+Garanta componentes reutilizáveis para elementos comuns (ex: botões, inputs, modais, cards).
+
+Isso garantirá que o mesmo componente seja usado em todo o projeto, mantendo a consistência visual.
+
+Testes de Responsividade e Acessibilidade:
+
+Teste o layout em diferentes dispositivos e telas para garantir que ele seja responsivo.
+
+Verifique a acessibilidade, garantindo que o projeto atenda aos padrões WCAG (contraste de cores, tamanho de textos, etc.).
+
+Melhorias de UX:
+
+Analise e proponha microinterações para melhorar a experiência do usuário (ex: animações suaves em botões, transições entre páginas).
+
+Garanta que os elementos interativos sejam claros e intuitivos.
+
+Exemplo de Melhorias Visuais e de UX:
+
+Tipografia:
+Definir uma escala tipográfica consistente, como:
+
+h1: 2.5rem (40px)
+h2: 2rem (32px)
+h3: 1.75rem (28px)
+p: 1rem (16px)
+
+Garantir que os textos sejam legíveis em todos os dispositivos.
+
+Cores:
+Criar uma paleta de cores consistente, como:
+
+primary: #007BFF
+secondary: #6C757D
+success: #28A745
+error: #DC3545
+
+Garantir que as cores tenham contraste suficiente para acessibilidade.
+
+Espaçamentos:
+Usar um sistema de espaçamento baseado em múltiplos de 8px, como:
+
+margin: 16px;
+padding: 24px;
+gap: 8px;
+
+Componentes Reutilizáveis:
+
+Criar um componente Button com estilos consistentes:
+
+const Button = ({ children, variant = "primary" }) => (
+  <button className={`btn btn-${variant}`}>{children}</button>
+);
+
+Responsividade:
+
+Garantir que o layout se ajuste a diferentes telas:
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+Acessibilidade:
+
+Adicionar atributos ARIA e garantir contraste adequado:
+
+<button aria-label="Submit form">Enviar</button>

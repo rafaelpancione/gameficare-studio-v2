@@ -1,66 +1,54 @@
 // src/pages/HomePage.js
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import StarryBackground from '../components/StarryBackground';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import CTAButton from '../components/CTAButton';
 import GlobalStyle from '../styles/GlobalStyle';
-import { FaInstagram, FaLinkedin } from 'react-icons/fa';
-import EmailInput from '../components/EmailInput'; // Certifique-se de que este componente existe
 
+// Componentes importados
+import StarryBackground from '../components/organisms/StarryBackground';
+import Header from '../components/organisms/Header';
+import Footer from '../components/organisms/Footer';
+import CTAButton from '../components/atoms/CTAButton';
+import InfoCard from '../components/molecules/InfoCard';
 
-//Importar as imagens necessárias
+// Import de imagens e SVGs
 import logoSvg from '../assets/images/logo-texto.svg';
 import moonSvg from '../assets/images/moon.svg';
 import { ReactComponent as ControleSvg } from '../assets/images/controle.svg';
 import { ReactComponent as RocketSvg } from '../assets/images/rocket.svg';
 import { ReactComponent as BusinessSvg } from '../assets/images/business.svg';
 import characterSvg from '../assets/images/character.svg';
-import InfoCard from '../components/InfoCard';
 import planet1Svg from '../assets/images/planet1.svg';
 import planet2Svg from '../assets/images/planet2.svg';
-import VideoPlayer from '../components/VideoPlayer';
 import character3Svg from '../assets/images/character3.svg';
-import character1Svg from '../assets/images/character1.svg';
-import AnimatedIcon from '../components/AnimatedIcon';
 
-// Animação de balanço
+// Code Splitting do VideoPlayer (lazy load)
+const VideoPlayer = lazy(() => import('../components/organisms/VideoPlayer'));
+
+// Animações (usadas apenas em desktop)
 const swingAnimation = keyframes`
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(-2deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  75% {
-    transform: translateY(10px) rotate(2deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(-2deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(10px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 `;
 
-// Animação de balanço para os planetas
 const planetSwingAnimation = keyframes`
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(-5deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 `;
 
+const characterSwingAnimation = keyframes`
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+`;
 
-// Estilos dos componentes
-const MainContainer = styled.div`
+// Container principal com grid simétrico
+const MainContainer = styled.main`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -71,10 +59,12 @@ const MainContainer = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    padding: 0 10px;
   }
 `;
 
-
+// No desktop, LeftSide fica à esquerda e RightSide à direita.
+// Em mobile, definimos a ordem: RightSide (personagem) vem primeiro e LeftSide depois.
 const LeftSide = styled.div`
   grid-column: span 3;
   display: flex;
@@ -85,6 +75,7 @@ const LeftSide = styled.div`
 
   @media (max-width: 768px) {
     grid-column: span 6;
+    order: 2;
     align-items: center;
     text-align: center;
   }
@@ -99,41 +90,44 @@ const RightSide = styled.div`
 
   @media (max-width: 768px) {
     grid-column: span 6;
+    order: 1;
     margin-top: 20px;
   }
 `;
 
 const WelcomeText = styled.h1`
   font-family: 'Press Start 2P', cursive;
-  font-size: 1.25rem; /* Aproximadamente 36px */
+  font-size: 1.25rem;
   color: #fff;
   margin: 0;
 
-  @media (max-width: 768px) {
-    font-size: 1.0rem;
-  }
 `;
 
 const Logo = styled.img`
   width: 80%;
   height: auto;
   margin: 20px 0;
+  display: block;
 
   @media (max-width: 768px) {
     width: 100%;
+    margin: 20px 0 40px 0;
   }
 `;
 
 const MoonImage = styled.img`
-position: absolute; /* Adicionado */
-  bottom: 100px; /* Posiciona na parte inferior */
-  right: 300px; /* Posiciona à direita */
+  position: absolute;
+  bottom: 30px;
+  right: 300px;
   width: 20%;
   height: auto;
-  margin: 0; /* Remova as margens */
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  z-index: -1;
+  object-fit: cover;
 
   @media (max-width: 768px) {
-    width: 20%;
+    display: none;
   }
 `;
 
@@ -141,23 +135,27 @@ const CharacterImage = styled.img`
   width: 100%;
   height: auto;
   animation: ${swingAnimation} 5s infinite ease-in-out;
+  display: block;
 
   @media (max-width: 768px) {
-    width: 100%;
+    width: 80%;
+    margin-bottom: 20px;
   }
 `;
-
-// Estilos NOSSOS SERVIÇOS
 
 const ServicesSection = styled.section`
   padding: 80px 20px;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 40px 10px;
+  }
 `;
 
 const SectionTitle = styled.div`
   position: relative;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 
   h2 {
     font-family: 'Press Start 2P', cursive;
@@ -166,15 +164,25 @@ const SectionTitle = styled.div`
     position: relative;
     z-index: 1;
   }
+    @media (max-width: 768px) {
+    padding: 20px 0 0 0;
+  }
 `;
 
 const PlanetImage = styled.img`
   position: absolute;
-  top: 0; /* Ajuste conforme necessário */
-  right: 10%; /* Aproximar do CardsContainer */
+  top: 0;
+  right: 10%;
   width: 200px;
   z-index: 0;
   animation: ${planetSwingAnimation} 5s infinite ease-in-out;
+  display: block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const CardsContainer = styled.div`
@@ -192,141 +200,54 @@ const CardsContainer = styled.div`
 
 const BottomPlanetImage = styled.img`
   position: absolute;
-  bottom: -30px; /* Ajuste para aproximar dos InfoCards */
-  left: 10%; /* Aproximar do CardsContainer */
+  bottom: -30px;
+  left: 10%;
   width: 200px;
   z-index: -1;
   animation: ${planetSwingAnimation} 5s infinite ease-in-out reverse;
+  display: block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const FeaturedProjectSection = styled.section`
   padding: 80px 20px;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 40px 10px;
+  }
 `;
 
-//CHARACTER3
-const characterSwingAnimation = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }`;
-
-  const Character3Image = styled.img`
+const Character3Image = styled.img`
   position: absolute;
-  top: 20px; /* Posiciona no topo, ajuste conforme necessário */
-  right: 250px; /* Posiciona à direita, ajuste conforme necessário */
-  width: 350px; /* Aumenta o tamanho da imagem */
-  z-index: -1; /* Garante que o personagem fique acima de outros elementos se necessário */
+  top: 20px;
+  right: 250px;
+  width: 350px;
+  z-index: -1;
   animation: ${characterSwingAnimation} 5s infinite ease-in-out;
-
-  @media (max-width: 768px) {
-    width: 150px; /* Ajusta o tamanho em telas menores */
-  }
-`;
-
-//FOOTER
-
-// Seção Principal
-const FooterSection = styled.section`
-  padding: 80px 20px;
-`;
-
-// Contêiner das colunas
-const ColumnsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`;
-
-// Estilo das colunas
-const Column = styled.div`
-  flex: 1;
-  min-width: 200px;
-  margin: 0 20px;
-
-  @media (max-width: 768px) {
-    margin: 20px 0;
-  }
-`;
-
-// Título de cada coluna
-const ColumnTitle = styled.h3`
-  font-family: 'Press Start 2P', cursive;
-  font-size: 1.2rem;
-  color: #fff;
-  margin-bottom: 20px;
-  text-align: left;
-`;
-
-// Links estilizados
-const StyledLink = styled.a`
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1rem;
-  color: #fff;
-  text-decoration: underline;
   display: block;
-  margin-bottom: 10px;
-  text-align: left;
+  aspect-ratio: 350 / 400;
+  object-fit: cover;
 
-  &:hover {
-    color: #ccc;
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
-
-// Texto simples
-const Text = styled.p`
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1rem;
-  color: #fff;
-  margin-bottom: 10px;
-  text-align: left;
-`;
-
-// Contêiner dos ícones de redes sociais
-const SocialIcons = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-// Estilo dos ícones
-const SocialIconLink = styled.a`
-  color: #fff;
-  font-size: 2.5rem;
-  margin-right: 15px;
-
-  &:hover {
-    color: #ccc;
-  }
-`;
-
-const ContainerFooter = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-`;
-
-
 
 function HomePage() {
-  const handlePrivacyPolicyClick = (e) => {
-    e.preventDefault();
-    // Lógica para abrir o modal com o PDF
-    // Você pode usar uma biblioteca como react-modal ou implementar seu próprio modal
-    // Exemplo simplificado:
-    window.open('/politica-de-privacidade.pdf', '_blank');
-  };
+  const navigate = useNavigate();
+
   return (
     <>
       <GlobalStyle />
+
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
+
       <Header
         menuItems={[
           { label: 'Home', link: '/' },
@@ -336,18 +257,18 @@ function HomePage() {
         ]}
         tooltipText="Oi, tudo bem?!"
       />
+
       <MainContainer>
         <LeftSide>
           <WelcomeText>BOAS VINDAS À</WelcomeText>
           <Logo src={logoSvg} alt="Gameficare Studio" />
           <CTAButton
             text="CONHEÇA NOSSOS PROJETOS"
-            onClick={() => {
-              window.location.href = '/projetos';
-            }}
+            onClick={() => navigate('/projetos')}
           />
-          <MoonImage src={moonSvg} alt="Lua" />
+          <MoonImage src={moonSvg} alt="Lua decorativa" loading="lazy" />
         </LeftSide>
+
         <RightSide>
           <CharacterImage src={characterSvg} alt="Personagem na Nave" />
         </RightSide>
@@ -356,7 +277,7 @@ function HomePage() {
       <ServicesSection>
         <SectionTitle>
           <h2>NOSSOS SERVIÇOS</h2>
-          <PlanetImage src={planet1Svg} alt="Planeta" />
+          <PlanetImage src={planet1Svg} alt="Planeta decorativo" loading="lazy" />
         </SectionTitle>
         <CardsContainer>
           <InfoCard
@@ -375,67 +296,18 @@ function HomePage() {
             description="Da ideia ao lançamento, transformamos sua visão em experiências digitais inesquecíveis!"
           />
         </CardsContainer>
-
-        <BottomPlanetImage src={planet2Svg} alt="Planeta" />
+        <BottomPlanetImage src={planet2Svg} alt="Planeta decorativo" loading="lazy" />
       </ServicesSection>
 
       <FeaturedProjectSection>
         <SectionTitle>
           <h2>PROJETO EM DESTAQUE</h2>
         </SectionTitle>
-
-        
-        <VideoPlayer videoId="BvWITplvctQ" />
-       
-        <Character3Image src={character3Svg} alt="Personagem Flutuando" />
+        <Suspense fallback={<div>Carregando vídeo...</div>}>
+          <VideoPlayer videoId="BvWITplvctQ" />
+        </Suspense>
+        <Character3Image src={character3Svg} alt="Personagem flutuante decorativo" loading="lazy" />
       </FeaturedProjectSection>
-
-            <ContainerFooter>
-      <FooterSection>
-        <ColumnsContainer>
-          {/* Coluna 1: LINKS ÚTEIS */}
-          <Column>
-            <ColumnTitle>LINKS ÚTEIS</ColumnTitle>
-            <StyledLink href="/sobre">Sobre nós</StyledLink>
-            <StyledLink href="/servicos">Nossos serviços</StyledLink>
-            <StyledLink href="/contato">Contato</StyledLink>
-            <StyledLink href="#" onClick={handlePrivacyPolicyClick}>
-              Política de Privacidade
-            </StyledLink>
-          </Column>
-
-          {/* Coluna 2: CONTATO */}
-          <Column>
-            <ColumnTitle>CONTATO</ColumnTitle>
-            <Text>E-mail: contato@gameficare.com</Text>
-            <Text>Telefone: +55 47 9998-5711</Text>
-            <SocialIcons>
-              <SocialIconLink
-                href="https://www.instagram.com/gameficare/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaInstagram />
-              </SocialIconLink>
-              <SocialIconLink
-                href="https://www.linkedin.com/company/gameficare/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaLinkedin />
-              </SocialIconLink>
-            </SocialIcons>
-          </Column>
-
-          {/* Coluna 3: NEWSLETTERS */}
-          <Column>
-            <ColumnTitle>NEWSLETTERS</ColumnTitle>
-            <Text>Se cadastre para receber novidades!</Text>
-            <EmailInput />
-          </Column>
-        </ColumnsContainer>
-      </FooterSection>  
-      </ContainerFooter>    
 
       <Footer />
     </>
