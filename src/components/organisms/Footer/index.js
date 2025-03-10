@@ -1,6 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { FaInstagram, FaLinkedin } from 'react-icons/fa';
 import EmailInput from '../../atoms/EmailInput';
+import PrivacyPolicyModal from '../../organisms/PrivacyPolicyModal';
+import politicaPdf from '../../../assets/documents/politica-de-privacidade.pdf'; 
 import {
   FooterContainer,
   ContainerFooter,
@@ -18,10 +21,26 @@ import {
 } from './styles';
 
 const Footer = () => {
-  const handlePrivacyPolicyClick = useCallback((e) => {
+  // Gerencia o estado de abertura do modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Abre a política de privacidade
+  const handleOpenPrivacyPolicy = (e) => {
     e.preventDefault();
-    window.open('/politica-de-privacidade.pdf', '_blank', 'noopener,noreferrer');
-  }, []);
+    
+    if (isMobile) {
+      // Em dispositivos móveis: abre em uma nova aba e NÃO exibe modal
+      window.open(politicaPdf, '_blank', 'noopener,noreferrer');
+    } else {
+      // Em desktops: exibe o modal com PDF inline
+      setIsModalOpen(true);
+    }
+  };
+
+    // Fecha o modal (somente em desktop)
+    const handleClosePrivacyPolicy = () => {
+      setIsModalOpen(false);
+    };
 
   return (
     <FooterContainer role="contentinfo">
@@ -35,10 +54,11 @@ const Footer = () => {
                 <StyledLink href="/sobre">Sobre nós</StyledLink>
                 <StyledLink href="/projetos">Nossos serviços</StyledLink>
                 <StyledLink href="/contato">Contato</StyledLink>
-                <StyledLink 
+                {/* Link para abrir o modal de Política de Privacidade */}
+                <StyledLink
                   href="#"
-                  onClick={handlePrivacyPolicyClick}
-                  aria-label="Política de Privacidade (abre nova janela)"
+                  onClick={handleOpenPrivacyPolicy}
+                  aria-label="Política de Privacidade (abre modal ou nova guia em mobile)"
                 >
                   Política de Privacidade
                 </StyledLink>
@@ -63,16 +83,16 @@ const Footer = () => {
                 </p>
               </ContactAddress>
               <SocialIcons aria-label="Redes sociais">
-                <SocialIconLink 
-                  href="https://www.instagram.com/gameficare/" 
+                <SocialIconLink
+                  href="https://www.instagram.com/gameficare/"
                   aria-label="Instagram (abre nova janela)"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FaInstagram aria-hidden="true" />
                 </SocialIconLink>
-                <SocialIconLink 
-                  href="https://www.linkedin.com/company/gameficare/" 
+                <SocialIconLink
+                  href="https://www.linkedin.com/company/gameficare/"
                   aria-label="LinkedIn (abre nova janela)"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -84,11 +104,10 @@ const Footer = () => {
 
             {/* Coluna 3 - Newsletter */}
             <Column aria-labelledby="newsletter-title">
-  <ColumnTitle id="newsletter-title">NEWSLETTERS</ColumnTitle>
-  <Text as="div">Se cadastre para receber novidades!</Text>
-  <EmailInput />
-</Column>
-
+              <ColumnTitle id="newsletter-title">NEWSLETTERS</ColumnTitle>
+              <Text as="div">Se cadastre para receber novidades!</Text>
+              <EmailInput />
+            </Column>
           </ColumnsContainer>
         </FooterSection>
 
@@ -96,6 +115,13 @@ const Footer = () => {
           © 2025 Gameficare Studio. Todos os direitos reservados.
         </FooterText>
       </ContainerFooter>
+
+      {/* Modal de Política de Privacidade */}
+      <PrivacyPolicyModal
+        isOpen={isModalOpen}
+        onClose={handleClosePrivacyPolicy}
+        pdfUrl={politicaPdf}
+      />
     </FooterContainer>
   );
 };

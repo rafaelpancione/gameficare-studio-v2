@@ -57,3 +57,11 @@ export const ErrorMessage = styled.span`
   display: block;
   font-family: 'Roboto Mono', monospace;
 `;
+
+export const SuccessMessage = styled.span`
+  color: ${({ theme }) => theme.colors.green || '#28a745'};
+  font-size: 0.8rem;
+  margin-top: 0.3125rem;
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+`;

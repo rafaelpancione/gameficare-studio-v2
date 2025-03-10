@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
   InputContainer,
   InputField,
@@ -31,14 +32,10 @@ VisuallyHidden.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-/**
- * Componente de Entrada de Email
- *
- * @param {function} onSubmit - Função chamada quando um email válido é submetido.
- */
 const EmailInput = ({ onSubmit }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [status, setStatus] = useState(''); // Novo estado para feedback
 
   const isValidEmail = useCallback(
     (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
@@ -46,14 +43,35 @@ const EmailInput = ({ onSubmit }) => {
   );
 
   const handleSubmit = useCallback(
-    (event) => {
+    async (event) => { // Modificado para async
       event.preventDefault();
-      if (isValidEmail(email)) {
-        onSubmit(email);
-        setError('');
-        setEmail(''); // Limpa o campo após submissão bem-sucedida
-      } else {
+      if (!isValidEmail(email)) {
         setError('Por favor, insira um email válido.');
+        return;
+      }
+
+      try {
+        // Chamada para API do Mailchimp
+        const response = await axios.post(
+          `https://${process.env.REACT_APP_MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${process.env.REACT_APP_MAILCHIMP_AUDIENCE_ID}/members`,
+          {
+            email_address: email,
+            status: "subscribed"
+          },
+          {
+            headers: {
+              Authorization: `apikey ${process.env.REACT_APP_MAILCHIMP_API_KEY}`
+            }
+          }
+        );
+
+        if (response.status === 200) {
+          setStatus('Inscrição realizada com sucesso!');
+          setEmail('');
+          onSubmit(email); // Chama a prop opcional
+        }
+      } catch (error) {
+        setError(error.response?.data?.title || 'Erro ao cadastrar. Tente novamente.');
       }
     },
     [email, isValidEmail, onSubmit]
@@ -98,6 +116,11 @@ const EmailInput = ({ onSubmit }) => {
           {error}
         </ErrorMessage>
       )}
+       {status && !error && ( // Novo bloco de status
+        <div style={{ color: 'green', marginTop: '5px', fontFamily: 'Roboto Mono, monospace' }}>
+          {status}
+        </div>
+      )}
     </form>
   );
 };
@@ -109,5 +132,6 @@ EmailInput.propTypes = {
 EmailInput.defaultProps = {
   onSubmit: () => {},
 };
+
 
 export default EmailInput;
