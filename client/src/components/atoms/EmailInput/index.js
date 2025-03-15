@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import {
   InputContainer,
   InputField,
@@ -50,10 +49,11 @@ const EmailInput = ({ onSubmit }) => {
     }
   
     try {
-      await fetch('https://script.google.com/macros/s/AKfycbzZqf5qQd3tz3ZaDAqUN1zwFg4wNU3P8xkBJHZZDrXaoVMKLzupsHVv8JVf6yFMmn5W7w/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Origin': 'http://localhost:3000'},
         body: JSON.stringify({ email }),
+        mode: 'no-cors' //remover em produção
       });
   
       setStatus('Inscrição realizada!');

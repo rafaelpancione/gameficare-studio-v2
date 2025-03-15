@@ -1,11 +1,13 @@
 // src/App.js
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import CookieConsent from "react-cookie-consent"; // Importe o componente
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import politicaPdf from './assets/documents/politica-de-privacidade.pdf'; // Importe o PDF
+import { initGA, logPageView } from "./utils/analytics";
+import RouteChangeTracker from "./utils/route_change";
 
 // Code Splitting das páginas:
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -14,10 +16,15 @@ const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
 const ContatoPage = lazy(() => import('./pages/ContatoPage'));
 
 function App() {
+  useEffect(() => {
+    initGA();
+    logPageView();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Router>
+      <RouteChangeTracker />
         {/* Banner de Cookies - Aparece em todas as páginas */}
         <CookieConsent
           location="bottom"
@@ -58,13 +65,13 @@ function App() {
 
             // Carrega o script do GA
             const script = document.createElement('script');
-            script.src = 'https://www.googletagmanager.com/gtag/js?id=SEU_ID_GA';
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-B2VVGXHYR3';
             script.async = true;
             document.head.appendChild(script);
 
             // Configuração do GA
             window.gtag('js', new Date());
-            window.gtag('config', 'SEU_ID_GA', { 
+            window.gtag('config', 'G-B2VVGXHYR3', { 
               anonymize_ip: true,
               allow_google_signals: false
             });
