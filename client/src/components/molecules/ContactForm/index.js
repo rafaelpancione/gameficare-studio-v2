@@ -28,7 +28,14 @@ const ContactForm = ({ onSubmit }) => {
 
   const [errors, setErrors] = useState({});
   const [isTouched, setIsTouched] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false); // Novo estado para loading
+  const [isSubmitting, setIsSubmitting] = useState(false); // Mantém para desativar o botão
+
+  // Estado de carregamento aprimorado (4.1)
+  const [status, setStatus] = useState({
+    loading: false,
+    success: false,
+    error: null,
+  });
 
   const subjects = ['Suporte', 'Orçamento', 'Parcerias', 'Outros'];
 
@@ -48,52 +55,66 @@ const ContactForm = ({ onSubmit }) => {
     }
   }, []);
 
-  const handleBlur = useCallback((e) => {
-    const { name, value } = e.target;
-    setIsTouched((prev) => ({ ...prev, [name]: true }));
-    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
-  }, [validateField]);
-
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (isTouched[name]) {
+  const handleBlur = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setIsTouched((prev) => ({ ...prev, [name]: true }));
       setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
-    }
-  }, [isTouched, validateField]);
+    },
+    [validateField]
+  );
 
-  const handleSubmit = useCallback(
-    debounce(async (e) => {
-      e.preventDefault();
-      if (isSubmitting) return;
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      if (isTouched[name]) {
+        setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+      }
+    },
+    [isTouched, validateField]
+  );
 
-      const validationErrors = Object.entries(formData).reduce((acc, [key, value]) => {
-        const error = validateField(key, value);
-        return error ? { ...acc, [key]: error } : acc;
+  // Cria uma função debounced para o envio do formulário
+  const debouncedSubmit = useCallback(
+    debounce(async () => {
+      // Verifica campos obrigatórios
+      const requiredFields = ['name', 'email', 'subject', 'message'];
+      const validationErrors = requiredFields.reduce((acc, field) => {
+        const error = validateField(field, formData[field]);
+        return error ? { ...acc, [field]: error } : acc;
       }, {});
 
       if (Object.keys(validationErrors).length > 0) {
-        setIsTouched(Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
         setErrors(validationErrors);
+        setIsTouched(Object.fromEntries(requiredFields.map((f) => [f, true])));
         return;
       }
 
       try {
         setIsSubmitting(true);
-        const response = await fetch(
-          'https://script.google.com/macros/s/AKfycbxJkYgbUIz1HDvkJRTPCzdBJ1EFwqYabUMWQNVyh-7tRqCDvyvPO64T-jv2HhPlDf-m/exec',
+        // Início do envio
+        setStatus({ loading: true, success: false, error: null });
+
+        await fetch(
+          'https://script.google.com/macros/s/AKfycbw9ju5gvDq4AiH8asWTqZCZPrHwUBvAcbalwjPe1Asd_BsAg_wLn2NV0fFSluooYF0u/exec',
           {
             method: 'POST',
+            mode: 'no-cors', // Adicionado para contornar a política de CORS
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
           }
         );
 
-        const result = await response.json(); // Adicione esta linha para debug
+        // Chama onSubmit somente se for uma função; caso contrário, ignora
+        if (typeof onSubmit === 'function') {
+          onSubmit(formData);
+        } else {
+          console.warn("onSubmit não é uma função, ignorando.");
+        }
 
-        if (!response.ok) throw new Error(result.error || 'Erro desconhecido');
-
-        onSubmit(formData);
+        // Em no-cors, a resposta é opaca; tratamos a requisição como sucesso se não ocorrer erro de rede.
+        setStatus({ loading: false, success: true, error: null });
         setFormData({
           name: '',
           email: '',
@@ -104,18 +125,27 @@ const ContactForm = ({ onSubmit }) => {
         });
         alert('Mensagem enviada com sucesso!');
       } catch (error) {
-        console.error('Erro no envio:', error.message); // Log detalhado
+        console.error('Erro no envio:', error.message);
         setErrors({ general: error.message || 'Erro ao enviar. Tente novamente.' });
+        setStatus({
+          loading: false,
+          success: false,
+          error: error.message || 'Erro ao enviar. Tente novamente.',
+        });
       } finally {
         setIsSubmitting(false);
       }
     }, 500),
-    [
-      formData, // Dependência explícita
-      isSubmitting, // Dependência explícita
-      onSubmit, // Dependência explícita
-      validateField, // Dependência explícita
-    ]
+    [formData, onSubmit, validateField]
+  );
+
+  // Função de tratamento do evento de submit que não passa o evento para a função debounced
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      debouncedSubmit();
+    },
+    [debouncedSubmit]
   );
 
   return (
@@ -131,7 +161,6 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.name}
               onChange={handleChange}
               onBlur={handleBlur}
-              /* Altere de hasError para $hasError */
               $hasError={!!errors.name}
               aria-describedby="name-error"
               aria-required="true"
@@ -152,7 +181,6 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              /* Altere de hasError para $hasError */
               $hasError={!!errors.email}
               aria-describedby="email-error"
               aria-required="true"
@@ -186,7 +214,6 @@ const ContactForm = ({ onSubmit }) => {
                 value={formData.subject}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                /* Altere de hasError para $hasError */
                 $hasError={!!errors.subject}
                 aria-describedby="subject-error"
                 aria-required="true"
@@ -217,7 +244,6 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.message}
               onChange={handleChange}
               onBlur={handleBlur}
-              /* Altere de hasError para $hasError */
               $hasError={!!errors.message}
               aria-describedby="message-error"
               aria-required="true"
@@ -230,11 +256,7 @@ const ContactForm = ({ onSubmit }) => {
           </InputGroup>
 
           {errors.general && (
-            <ErrorMessage
-              role="alert"
-              aria-live="assertive"
-              style={{ marginTop: '1rem', textAlign: 'center' }}
-            >
+            <ErrorMessage role="alert" aria-live="assertive" style={{ marginTop: '1rem', textAlign: 'center' }}>
               {errors.general}
             </ErrorMessage>
           )}
@@ -257,6 +279,25 @@ const ContactForm = ({ onSubmit }) => {
             {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
           </SubmitButton>
         </Form>
+
+        {/* Componente de Feedback */}
+        {status.loading && (
+          <div role="alert" aria-live="polite" style={{ marginTop: '1rem' }}>
+            Enviando mensagem...
+          </div>
+        )}
+
+        {status.success && (
+          <div role="alert" aria-live="polite" style={{ color: 'green', marginTop: '1rem' }}>
+            Mensagem enviada com sucesso!
+          </div>
+        )}
+
+        {status.error && (
+          <div role="alert" aria-live="assertive" style={{ color: 'red', marginTop: '1rem' }}>
+            Erro: {status.error}
+          </div>
+        )}
       </FormContainer>
     </FormWrapper>
   );
