@@ -31,37 +31,45 @@ VisuallyHidden.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const EmailInput = ({ onSubmit }) => {
+const EmailInput = ({ onSubmit = () => {} }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState(''); // Novo estado para feedback
 
   const isValidEmail = useCallback(
-    (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+    (emailValue) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue),
     []
   );
 
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    if (!isValidEmail(email)) {
-      setError('Por favor, insira um email válido.');
-      return;
-    }
-  
-    try {
-      await fetch('https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Origin': 'http://localhost:3000'},
-        body: JSON.stringify({ email }),
-        mode: 'no-cors' //remover em produção
-      });
-  
-      setStatus('Inscrição realizada!');
-      setEmail('');
-    } catch (error) {
-      setError('Erro ao cadastrar. Tente novamente.');
-    }
-  }, [email, isValidEmail]);
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (!isValidEmail(email)) {
+        setError('Por favor, insira um email válido.');
+        return;
+      }
+
+      try {
+        await fetch(
+          'https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' },
+            body: JSON.stringify({ email }),
+            mode: 'no-cors', // remover em produção
+          }
+        );
+
+        setStatus('Inscrição realizada!');
+        setEmail('');
+        // Aqui você pode chamar onSubmit, se desejar acionar algo externo
+        // onSubmit(email);
+      } catch (error) {
+        setError('Erro ao cadastrar. Tente novamente.');
+      }
+    },
+    [email, isValidEmail]
+  );
 
   const handleChange = useCallback(
     (e) => {
@@ -102,8 +110,14 @@ const EmailInput = ({ onSubmit }) => {
           {error}
         </ErrorMessage>
       )}
-       {status && !error && ( // Novo bloco de status
-        <div style={{ color: 'green', marginTop: '5px', fontFamily: 'Roboto Mono, monospace' }}>
+      {status && !error && (
+        <div
+          style={{
+            color: 'green',
+            marginTop: '5px',
+            fontFamily: 'Roboto Mono, monospace',
+          }}
+        >
           {status}
         </div>
       )}
@@ -114,10 +128,5 @@ const EmailInput = ({ onSubmit }) => {
 EmailInput.propTypes = {
   onSubmit: PropTypes.func,
 };
-
-EmailInput.defaultProps = {
-  onSubmit: () => {},
-};
-
 
 export default EmailInput;

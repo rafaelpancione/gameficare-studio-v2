@@ -12,7 +12,13 @@ import { Button } from './styles';
  * @param {function} props.onClick - Função executada ao clicar no botão.
  * @param {string} props.type - Tipo do botão (ex: "button", "submit").
  */
-function CTAButtonComponent({ text, variant, size, onClick, type }) {
+function CTAButtonComponent({
+  text,
+  variant = 'primary',
+  size = 'medium',
+  onClick = () => {},
+  type = 'button',
+}) {
   return (
     <Button type={type} variant={variant} size={size} onClick={onClick}>
       {text}
@@ -26,13 +32,6 @@ CTAButtonComponent.propTypes = {
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   onClick: PropTypes.func,
   type: PropTypes.string,
-};
-
-CTAButtonComponent.defaultProps = {
-  variant: 'primary',
-  size: 'medium',
-  onClick: () => {},
-  type: 'button',
 };
 
 export default React.memo(CTAButtonComponent);

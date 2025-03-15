@@ -2,8 +2,15 @@ import React, { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BackgroundContainer, GridOverlay, Star } from './styles';
 
-const StarryBackground = ({ starCount, minSize, maxSize }) => {
-  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+const StarryBackground = ({
+  starCount = 20,
+  minSize = 1,
+  maxSize = 3,
+}) => {
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
   const isMobile = dimensions.width <= 768;
 
   // Reduz em 80% o número de estrelas em mobile
@@ -13,7 +20,7 @@ const StarryBackground = ({ starCount, minSize, maxSize }) => {
     const positions = [];
     const maxAttempts = computedStarCount * 10;
     let attempts = 0;
-    
+
     // Reduz a distância mínima em mobile
     const minDistance = isMobile ? 6 : 8;
 
@@ -21,9 +28,10 @@ const StarryBackground = ({ starCount, minSize, maxSize }) => {
       const top = Math.random() * 100;
       const left = Math.random() * 100;
 
-      const isFarEnough = positions.every(pos => 
-        Math.abs(pos.top - top) > minDistance || 
-        Math.abs(pos.left - left) > minDistance
+      const isFarEnough = positions.every(
+        (pos) =>
+          Math.abs(pos.top - top) > minDistance ||
+          Math.abs(pos.left - left) > minDistance
       );
 
       if (isFarEnough) positions.push({ top, left });
@@ -51,7 +59,10 @@ const StarryBackground = ({ starCount, minSize, maxSize }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
 
     window.addEventListener('resize', handleResize);
@@ -70,12 +81,6 @@ StarryBackground.propTypes = {
   starCount: PropTypes.number,
   minSize: PropTypes.number,
   maxSize: PropTypes.number,
-};
-
-StarryBackground.defaultProps = {
-  starCount: 20,
-  minSize: 1,
-  maxSize: 3,
 };
 
 export default React.memo(StarryBackground);

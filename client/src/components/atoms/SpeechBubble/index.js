@@ -11,7 +11,11 @@ import {
   TextContent
 } from './styles';
 
-const SpeechBubble = ({ title, texts, slider }) => {
+const SpeechBubble = ({
+  title,
+  texts,
+  slider = true, // Define o valor padrão diretamente aqui
+}) => {
   const normalizedTexts = useMemo(
     () => (Array.isArray(texts) ? texts : [texts]),
     [texts]
@@ -31,11 +35,14 @@ const SpeechBubble = ({ title, texts, slider }) => {
     }
   }, [slider, normalizedTexts]);
 
-  const handleDotClick = useCallback((index) => {
-    if (slider && normalizedTexts.length > 1) {
-      setCurrentIndex(index);
-    }
-  }, [slider, normalizedTexts]);
+  const handleDotClick = useCallback(
+    (index) => {
+      if (slider && normalizedTexts.length > 1) {
+        setCurrentIndex(index);
+      }
+    },
+    [slider, normalizedTexts]
+  );
 
   const displayText =
     slider && normalizedTexts.length > 1
@@ -82,12 +89,11 @@ const SpeechBubble = ({ title, texts, slider }) => {
 
 SpeechBubble.propTypes = {
   title: PropTypes.string.isRequired,
-  texts: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
+  texts: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]).isRequired,
   slider: PropTypes.bool,
-};
-
-SpeechBubble.defaultProps = {
-  slider: true,
 };
 
 export default memo(SpeechBubble);

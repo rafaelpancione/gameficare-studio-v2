@@ -8,7 +8,11 @@ import { Card, Content, Title, Description } from './styles';
  * - Utilização de IDs dinâmicos para evitar conflitos em caso de múltiplos cards na mesma página.
  * - Melhoria nos atributos ARIA para melhor entendimento por leitores de tela.
  */
-const SimpleProjectCard = ({ title, description, cardId }) => {
+const SimpleProjectCard = ({
+  title,
+  description,
+  cardId = null, // Valor padrão definido diretamente aqui
+}) => {
   // Se não for fornecido um cardId, geramos um fallback simples.
   // Em produção, normalmente se utilizaria alguma estratégia mais robusta para gerar IDs únicos.
   const uniqueId = cardId || Math.random().toString(36).substring(2, 9);
@@ -29,10 +33,6 @@ SimpleProjectCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   cardId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-};
-
-SimpleProjectCard.defaultProps = {
-  cardId: null,
 };
 
 export default memo(SimpleProjectCard);

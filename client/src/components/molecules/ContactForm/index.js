@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import debounce from 'lodash.debounce'; // Importação correta do debounce
 import {
   FormWrapper,
   FormContainer,
@@ -13,7 +14,7 @@ import {
   SubmitButton,
   ArrowIcon,
 } from './styles';
-import ArrowDownSVG from '../../../assets/icons/arrow-down.svg';
+const ArrowDownSVG = React.lazy(() => import('../../../assets/icons/arrow-down.svg'));
 
 const ContactForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -22,10 +23,12 @@ const ContactForm = ({ onSubmit }) => {
     company: '',
     subject: '',
     message: '',
+    honeypot: '',
   });
 
   const [errors, setErrors] = useState({});
   const [isTouched, setIsTouched] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // Novo estado para loading
 
   const subjects = ['Suporte', 'Orçamento', 'Parcerias', 'Outros'];
 
@@ -47,51 +50,78 @@ const ContactForm = ({ onSubmit }) => {
 
   const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
-    setIsTouched(prev => ({ ...prev, [name]: true }));
-    setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
+    setIsTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
   }, [validateField]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (isTouched[name]) {
-      setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
     }
   }, [isTouched, validateField]);
 
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
-    const newTouched = Object.keys(formData).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {});
-    
-    setIsTouched(newTouched);
-    
-    const validationErrors = Object.entries(formData).reduce((acc, [key, value]) => {
-      const error = validateField(key, value);
-      return error ? { ...acc, [key]: error } : acc;
-    }, {});
+  const handleSubmit = useCallback(
+    debounce(async (e) => {
+      e.preventDefault();
+      if (isSubmitting) return;
 
-    if (Object.keys(validationErrors).length === 0) {
-      onSubmit(formData);
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        subject: '',
-        message: '',
-      });
-      setIsTouched({});
-    }
-    setErrors(validationErrors);
-  }, [formData, onSubmit, validateField]);
+      const validationErrors = Object.entries(formData).reduce((acc, [key, value]) => {
+        const error = validateField(key, value);
+        return error ? { ...acc, [key]: error } : acc;
+      }, {});
+
+      if (Object.keys(validationErrors).length > 0) {
+        setIsTouched(Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
+        setErrors(validationErrors);
+        return;
+      }
+
+      try {
+        setIsSubmitting(true);
+        const response = await fetch(
+          'https://script.google.com/macros/s/AKfycbxJkYgbUIz1HDvkJRTPCzdBJ1EFwqYabUMWQNVyh-7tRqCDvyvPO64T-jv2HhPlDf-m/exec',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          }
+        );
+
+        const result = await response.json(); // Adicione esta linha para debug
+
+        if (!response.ok) throw new Error(result.error || 'Erro desconhecido');
+
+        onSubmit(formData);
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          subject: '',
+          message: '',
+          honeypot: '',
+        });
+        alert('Mensagem enviada com sucesso!');
+      } catch (error) {
+        console.error('Erro no envio:', error.message); // Log detalhado
+        setErrors({ general: error.message || 'Erro ao enviar. Tente novamente.' });
+      } finally {
+        setIsSubmitting(false);
+      }
+    }, 500),
+    [
+      formData, // Dependência explícita
+      isSubmitting, // Dependência explícita
+      onSubmit, // Dependência explícita
+      validateField, // Dependência explícita
+    ]
+  );
 
   return (
     <FormWrapper>
       <FormContainer>
         <Form noValidate onSubmit={handleSubmit} aria-label="Formulário de contato">
-          {/* Nome */}
           <InputGroup>
             <Label htmlFor="name">Nome *</Label>
             <InputField
@@ -101,14 +131,18 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.name}
               onChange={handleChange}
               onBlur={handleBlur}
-              hasError={!!errors.name}
+              /* Altere de hasError para $hasError */
+              $hasError={!!errors.name}
               aria-describedby="name-error"
               aria-required="true"
             />
-            {errors.name && <ErrorMessage id="name-error" role="alert">{errors.name}</ErrorMessage>}
+            {errors.name && (
+              <ErrorMessage id="name-error" role="alert">
+                {errors.name}
+              </ErrorMessage>
+            )}
           </InputGroup>
 
-          {/* Email */}
           <InputGroup>
             <Label htmlFor="email">Email *</Label>
             <InputField
@@ -118,14 +152,18 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              hasError={!!errors.email}
+              /* Altere de hasError para $hasError */
+              $hasError={!!errors.email}
               aria-describedby="email-error"
               aria-required="true"
             />
-            {errors.email && <ErrorMessage id="email-error" role="alert">{errors.email}</ErrorMessage>}
+            {errors.email && (
+              <ErrorMessage id="email-error" role="alert">
+                {errors.email}
+              </ErrorMessage>
+            )}
           </InputGroup>
 
-          {/* Empresa */}
           <InputGroup>
             <Label htmlFor="company">Empresa/Instituição</Label>
             <InputField
@@ -139,7 +177,6 @@ const ContactForm = ({ onSubmit }) => {
             />
           </InputGroup>
 
-          {/* Assunto */}
           <InputGroup>
             <Label htmlFor="subject">Assunto *</Label>
             <SelectWrapper>
@@ -149,23 +186,29 @@ const ContactForm = ({ onSubmit }) => {
                 value={formData.subject}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                hasError={!!errors.subject}
+                /* Altere de hasError para $hasError */
+                $hasError={!!errors.subject}
                 aria-describedby="subject-error"
                 aria-required="true"
               >
                 <option value="">Selecione...</option>
                 {subjects.map((subject) => (
-                  <option key={subject} value={subject}>{subject}</option>
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
                 ))}
               </SelectField>
               <ArrowIcon aria-hidden="true">
                 <img src={ArrowDownSVG} alt="" role="presentation" />
               </ArrowIcon>
             </SelectWrapper>
-            {errors.subject && <ErrorMessage id="subject-error" role="alert">{errors.subject}</ErrorMessage>}
+            {errors.subject && (
+              <ErrorMessage id="subject-error" role="alert">
+                {errors.subject}
+              </ErrorMessage>
+            )}
           </InputGroup>
 
-          {/* Mensagem */}
           <InputGroup>
             <Label htmlFor="message">Mensagem *</Label>
             <TextAreaField
@@ -174,22 +217,49 @@ const ContactForm = ({ onSubmit }) => {
               value={formData.message}
               onChange={handleChange}
               onBlur={handleBlur}
-              hasError={!!errors.message}
+              /* Altere de hasError para $hasError */
+              $hasError={!!errors.message}
               aria-describedby="message-error"
               aria-required="true"
             />
-            {errors.message && <ErrorMessage id="message-error" role="alert">{errors.message}</ErrorMessage>}
+            {errors.message && (
+              <ErrorMessage id="message-error" role="alert">
+                {errors.message}
+              </ErrorMessage>
+            )}
           </InputGroup>
 
-          <SubmitButton type="submit" aria-live="polite">
-            Enviar Mensagem
+          {errors.general && (
+            <ErrorMessage
+              role="alert"
+              aria-live="assertive"
+              style={{ marginTop: '1rem', textAlign: 'center' }}
+            >
+              {errors.general}
+            </ErrorMessage>
+          )}
+
+          {/* Campo honeypot para evitar SPAM (oculto) */}
+          <InputGroup style={{ display: 'none' }} aria-hidden="true">
+            <Label htmlFor="honeypot">Não preencha este campo</Label>
+            <InputField
+              type="text"
+              id="honeypot"
+              name="honeypot"
+              value={formData.honeypot}
+              onChange={handleChange}
+              tabIndex="-1"
+              autoComplete="off"
+            />
+          </InputGroup>
+
+          <SubmitButton type="submit" aria-live="polite" disabled={isSubmitting}>
+            {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
           </SubmitButton>
         </Form>
       </FormContainer>
     </FormWrapper>
   );
 };
-
-// ... PropTypes permanecem
 
 export default ContactForm;

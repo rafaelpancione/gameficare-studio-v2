@@ -8,13 +8,17 @@ import { ProgressBarContainer, Label, BarContainer, Square } from './styles';
  * @param {object} props - Propriedades do componente.
  * @param {string} props.label - Texto exibido acima da barra de progresso.
  * @param {number} props.progress - Porcentagem de progresso (0 a 100).
- * @param {string} props.color - Cor dos quadrados preenchidos na barra.
+ * @param {string} [props.color='var(--yellow)'] - Cor dos quadrados preenchidos na barra.
  */
-const ProgressBar = ({ label, progress, color }) => {
+const ProgressBar = ({
+  label,
+  progress,
+  color = 'var(--yellow)', // Valor padrão aqui
+}) => {
   const [totalSquares, setTotalSquares] = useState(16);
 
   // Utiliza matchMedia para observar mudanças de viewport de forma performática,
-  // definindo 14 quadradinhos para telas menores que 768px e 16 para telas maiores.
+  // definindo 16 quadradinhos para telas menores que 768px e 16 para telas maiores (ajustável se desejado).
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');
     const updateSquaresCount = () => {
@@ -60,10 +64,6 @@ ProgressBar.propTypes = {
   label: PropTypes.string.isRequired,
   progress: PropTypes.number.isRequired,
   color: PropTypes.string,
-};
-
-ProgressBar.defaultProps = {
-  color: 'var(--yellow)',
 };
 
 export default React.memo(ProgressBar);

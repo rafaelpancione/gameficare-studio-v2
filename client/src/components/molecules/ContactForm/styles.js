@@ -51,10 +51,13 @@ const sharedInputStyles = css`
     box-shadow: 0 0 0 3px ${({ theme }) => theme.colors?.yellow || '#ffd700'};
   }
 
-  ${({ hasError, theme }) => hasError && css`
-    border-color: ${theme.colors?.red || '#ff0000'};
-    box-shadow: 0.25rem 0.25rem 0 ${theme.colors?.red || '#ff0000'};
-  `}
+  /* Uso de transient prop para evitar passar propriedades não-DOM ao elemento HTML */
+  ${({ $hasError, theme }) =>
+    $hasError &&
+    css`
+      border-color: ${theme.colors?.red || '#ff0000'};
+      box-shadow: 0.25rem 0.25rem 0 ${theme.colors?.red || '#ff0000'};
+    `}
 `;
 
 export const InputField = styled.input`
@@ -85,6 +88,9 @@ export const ErrorMessage = styled.span`
   font-family: 'Roboto', sans-serif;
   line-height: 1.4;
   order: 3;
+  text-align: center; // Centraliza o texto
+  width: 100%; // Ocupa toda a largura
+  margin: 1rem 0; // Espaçamento consistente
 `;
 
 export const ArrowIcon = styled.span`
@@ -116,7 +122,8 @@ export const SubmitButton = styled.button`
   width: 100%;
   margin-top: 1rem;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: ${({ theme }) => theme.colors?.red || '#ff0000'};
     transform: translateY(-2px);
     box-shadow: 0.75rem 0.75rem 0 ${({ theme }) => theme.colors?.black || '#000'};
