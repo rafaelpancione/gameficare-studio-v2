@@ -42,40 +42,26 @@ const EmailInput = ({ onSubmit }) => {
     []
   );
 
-  const handleSubmit = useCallback(
-    async (event) => { // Modificado para async
-      event.preventDefault();
-      if (!isValidEmail(email)) {
-        setError('Por favor, insira um email válido.');
-        return;
-      }
-
-      try {
-        // Chamada para API do Mailchimp
-        const response = await axios.post(
-          `https://${process.env.REACT_APP_MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${process.env.REACT_APP_MAILCHIMP_AUDIENCE_ID}/members`,
-          {
-            email_address: email,
-            status: "subscribed"
-          },
-          {
-            headers: {
-              Authorization: `apikey ${process.env.REACT_APP_MAILCHIMP_API_KEY}`
-            }
-          }
-        );
-
-        if (response.status === 200) {
-          setStatus('Inscrição realizada com sucesso!');
-          setEmail('');
-          onSubmit(email); // Chama a prop opcional
-        }
-      } catch (error) {
-        setError(error.response?.data?.title || 'Erro ao cadastrar. Tente novamente.');
-      }
-    },
-    [email, isValidEmail, onSubmit]
-  );
+  const handleSubmit = useCallback(async (event) => {
+    event.preventDefault();
+    if (!isValidEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+  
+    try {
+      await fetch('https://script.google.com/macros/s/AKfycbzZqf5qQd3tz3ZaDAqUN1zwFg4wNU3P8xkBJHZZDrXaoVMKLzupsHVv8JVf6yFMmn5W7w/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+  
+      setStatus('Inscrição realizada!');
+      setEmail('');
+    } catch (error) {
+      setError('Erro ao cadastrar. Tente novamente.');
+    }
+  }, [email, isValidEmail]);
 
   const handleChange = useCallback(
     (e) => {
