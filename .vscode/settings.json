@@ -1,0 +1,35 @@
+{
+    // Formatar ao salvar
+    "editor.formatOnSave": true,
+  
+    // Aplicar correções do ESLint ao salvar
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+  
+    // Prettier como formatador padrão
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+  
+    // ESLint validando estes arquivos
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+    ],
+  
+    // Terminal integrado inicia na raiz do projeto
+    "terminal.integrated.cwd": "${workspaceFolder}"
+  }
+  
