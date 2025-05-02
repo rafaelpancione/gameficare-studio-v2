@@ -14,7 +14,9 @@ import {
   SubmitButton,
   ArrowIcon,
 } from './styles';
-const ArrowDownSVG = React.lazy(() => import('../../../assets/icons/arrow-down.svg'));
+const ArrowDownSVG = React.lazy(
+  () => import('../../../assets/icons/arrow-down.svg')
+);
 
 const ContactForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -45,7 +47,9 @@ const ContactForm = ({ onSubmit }) => {
         return value.trim() ? '' : 'Por favor, insira seu nome.';
       case 'email':
         if (!value.trim()) return 'Por favor, insira seu email.';
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email inválido.';
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+          ? ''
+          : 'Email inválido.';
       case 'subject':
         return value ? '' : 'Selecione um assunto.';
       case 'message':
@@ -110,7 +114,7 @@ const ContactForm = ({ onSubmit }) => {
         if (typeof onSubmit === 'function') {
           onSubmit(formData);
         } else {
-          console.warn("onSubmit não é uma função, ignorando.");
+          console.warn('onSubmit não é uma função, ignorando.');
         }
 
         // Em no-cors, a resposta é opaca; tratamos a requisição como sucesso se não ocorrer erro de rede.
@@ -126,7 +130,9 @@ const ContactForm = ({ onSubmit }) => {
         alert('Mensagem enviada com sucesso!');
       } catch (error) {
         console.error('Erro no envio:', error.message);
-        setErrors({ general: error.message || 'Erro ao enviar. Tente novamente.' });
+        setErrors({
+          general: error.message || 'Erro ao enviar. Tente novamente.',
+        });
         setStatus({
           loading: false,
           success: false,
@@ -151,7 +157,11 @@ const ContactForm = ({ onSubmit }) => {
   return (
     <FormWrapper>
       <FormContainer>
-        <Form noValidate onSubmit={handleSubmit} aria-label="Formulário de contato">
+        <Form
+          noValidate
+          onSubmit={handleSubmit}
+          aria-label="Formulário de contato"
+        >
           <InputGroup>
             <Label htmlFor="name">Nome *</Label>
             <InputField
@@ -256,7 +266,11 @@ const ContactForm = ({ onSubmit }) => {
           </InputGroup>
 
           {errors.general && (
-            <ErrorMessage role="alert" aria-live="assertive" style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <ErrorMessage
+              role="alert"
+              aria-live="assertive"
+              style={{ marginTop: '1rem', textAlign: 'center' }}
+            >
               {errors.general}
             </ErrorMessage>
           )}
@@ -275,7 +289,11 @@ const ContactForm = ({ onSubmit }) => {
             />
           </InputGroup>
 
-          <SubmitButton type="submit" aria-live="polite" disabled={isSubmitting}>
+          <SubmitButton
+            type="submit"
+            aria-live="polite"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
           </SubmitButton>
         </Form>
@@ -288,13 +306,21 @@ const ContactForm = ({ onSubmit }) => {
         )}
 
         {status.success && (
-          <div role="alert" aria-live="polite" style={{ color: 'green', marginTop: '1rem' }}>
+          <div
+            role="alert"
+            aria-live="polite"
+            style={{ color: 'green', marginTop: '1rem' }}
+          >
             Mensagem enviada com sucesso!
           </div>
         )}
 
         {status.error && (
-          <div role="alert" aria-live="assertive" style={{ color: 'red', marginTop: '1rem' }}>
+          <div
+            role="alert"
+            aria-live="assertive"
+            style={{ color: 'red', marginTop: '1rem' }}
+          >
             Erro: {status.error}
           </div>
         )}
