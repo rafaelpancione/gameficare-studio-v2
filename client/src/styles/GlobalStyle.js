@@ -44,9 +44,15 @@ const GlobalStyle = createGlobalStyle`
     monospace;
 }
 
-  /* Se quiser forçar Press Start 2P em títulos: */
-  h1, h2, h3, h4, h5, h6 {
+  /* Fontes de títulos */
+  h1, h3, h4, h5, h6 {
     font-family: 'Press Start 2P', cursive;
+  }
+
+  /* h2 com drop-shadow azul */
+  h2 {
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 0 var(--blue);
   }
 
   /* Container principal da aplicação */

@@ -6,17 +6,18 @@ const popIn = keyframes`
 `;
 
 export const Card = styled.article`
-  background-color: ${({ theme }) => theme.colors?.darkBlue || 'var(--dark-blue)'};
+  background-color: ${({ theme }) =>
+    theme.colors?.darkBlue || 'var(--dark-blue)'};
   border: 2px solid ${({ theme }) => theme.colors?.black || '#000'};
   border-radius: ${({ theme }) => theme.borderRadius || '5px'};
   box-shadow: 5px 5px 0 ${({ theme }) => theme.colors?.black || '#000'};
   margin: ${({ theme }) => (theme.spacing ? theme.spacing(1.25) : '10px')};
   padding: ${({ theme }) => (theme.spacing ? theme.spacing(2.5) : '20px')};
   position: relative;
-  transition: 
+  transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  cursor: pointer;
+  cursor: default;
   width: 100%;
   min-height: 300px;
   overflow: hidden;
@@ -42,11 +43,13 @@ export const Card = styled.article`
     min-height: 400px;
   }
 
-  ${({ theme }) => theme.breakpoints?.xl && css`
-    @media (min-width: 1280px) {
-      min-height: 450px;
-    }
-  `}
+  ${({ theme }) =>
+    theme.breakpoints?.xl &&
+    css`
+      @media (min-width: 1280px) {
+        min-height: 450px;
+      }
+    `}
 `;
 
 export const CardContent = styled.div`

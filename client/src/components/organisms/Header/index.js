@@ -11,7 +11,7 @@ import {
   MenuItem,
   HamburgerButton,
   CloseButton,
-  Overlay
+  Overlay,
 } from './styles';
 import logoSvg from '../../../assets/images/logo.svg';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMobileMenu = () => {
-    setIsMobileMenuOpen(prevState => {
+    setIsMobileMenuOpen((prevState) => {
       const newState = !prevState;
       document.body.style.overflow = newState ? 'hidden' : 'auto';
       return newState;
@@ -42,17 +42,17 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
   return (
     <HeaderContainer>
       <HeaderContent>
-        <LogoContainer>
-          <Logo src={logoSvg} alt="Logo" />
+        <LogoContainer as={Link} to="/" title="Voltar para a página inicial">
+          <Logo src={logoSvg} alt="Logo Gameficare" />
           <Tooltip>{tooltipText}</Tooltip>
         </LogoContainer>
 
         {/* Menu Desktop */}
         <Menu $isMobile={false}>
           {menuItems.map((item) => (
-            <MenuItem 
-              as={Link} 
-              to={item.link} 
+            <MenuItem
+              as={Link}
+              to={item.link}
               key={item.label}
               onClick={closeMobileMenu}
             >
@@ -62,8 +62,8 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
         </Menu>
 
         {/* Botão Hambúrguer */}
-        <HamburgerButton 
-          onClick={handleMobileMenu} 
+        <HamburgerButton
+          onClick={handleMobileMenu}
           aria-label="Abrir menu"
           aria-expanded={isMobileMenuOpen}
         >
@@ -71,8 +71,8 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
         </HamburgerButton>
 
         {/* Menu Mobile */}
-        <Overlay 
-          $isOpen={isMobileMenuOpen} 
+        <Overlay
+          $isOpen={isMobileMenuOpen}
           onClick={closeMobileMenu}
           onKeyDown={handleOverlayKeyDown}
           tabIndex="0"
@@ -80,10 +80,7 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
           aria-label="Fechar menu"
         />
         <MobileMenuWrapper $isOpen={isMobileMenuOpen}>
-          <CloseButton 
-            onClick={handleMobileMenu}
-            aria-label="Fechar menu"
-          >
+          <CloseButton onClick={handleMobileMenu} aria-label="Fechar menu">
             <FiX size={24} />
           </CloseButton>
           <Menu $isMobile={true}>
