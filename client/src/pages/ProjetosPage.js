@@ -8,6 +8,7 @@ import CTAButton from '../components/atoms/CTAButton';
 import InfoCard from '../components/molecules/InfoCard';
 import SpeechBubble from '../components/atoms/SpeechBubble';
 import ProjectCard from '../components/molecules/ProjectCard';
+import ConsoleGame from '../components/organisms/ConsoleGame';
 import { Helmet } from 'react-helmet-async';
 // Import de imagens e ícones
 import gameSvg from '../assets/images/game.svg';
@@ -47,7 +48,17 @@ const ConsoleSection = styled.section`
 `;
 
 const ConsoleImage = styled.img`
-  width: 70%;
+  width: 100%;
+  display: block
+  z-index: 1;
+`;
+
+const ConsoleContainer = styled.div`
+  width: 70%; /* mesmo width do ConsoleImage antes */
+  position: relative; /* referência para o GameWrapper */
+  display: flex; /* opcional se precisar de alignments */
+  justify-content: center;
+  align-items: center;
 `;
 
 // ============== SEÇÃO 2: NOSSOS SERVIÇOS ==================
@@ -290,7 +301,10 @@ function ProjetosPage() {
 
       {/* Seção 1: Console em destaque */}
       <ConsoleSection>
-        <ConsoleImage src={gameSvg} alt="Console Gameficare" />
+        <ConsoleContainer>
+          <ConsoleImage src={gameSvg} alt="Console Gameficare" />
+          <ConsoleGame />
+        </ConsoleContainer>
       </ConsoleSection>
 
       {/* Seção 2: NOSSOS SERVIÇOS */}
