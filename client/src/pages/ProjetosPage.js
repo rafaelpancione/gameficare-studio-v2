@@ -8,7 +8,7 @@ import CTAButton from '../components/atoms/CTAButton';
 import InfoCard from '../components/molecules/InfoCard';
 import SpeechBubble from '../components/atoms/SpeechBubble';
 import ProjectCard from '../components/molecules/ProjectCard';
-
+import { Helmet } from 'react-helmet-async';
 // Import de imagens e ícones
 import gameSvg from '../assets/images/game.svg';
 import planet1Svg from '../assets/images/planet1.svg';
@@ -40,8 +40,7 @@ const planetSwingAnimation = keyframes`
 
 // ============== SEÇÃO 1: CONSOLE EM DESTAQUE ==================
 const ConsoleSection = styled.section`
-  
-  height: 100vh; 
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,7 +52,7 @@ const ConsoleImage = styled.img`
 
 // ============== SEÇÃO 2: NOSSOS SERVIÇOS ==================
 const ServicesSection = styled.section`
-   padding: 80px 20px;
+  padding: 80px 20px;
   position: relative;
 
   @media (max-width: 768px) {
@@ -82,9 +81,9 @@ const SectionText = styled.p`
   text-align: center;
   margin-bottom: 40px;
   line-height: 1.5;
-  max-width: 1200px;  /* limita a largura máxima do texto */
- margin: 0 auto 40px; /* centraliza e mantém espaçamento inferior */
- overflow-wrap: break-word; /* se houver palavras muito longas, elas quebrarão linha */
+  max-width: 1200px; /* limita a largura máxima do texto */
+  margin: 0 auto 40px; /* centraliza e mantém espaçamento inferior */
+  overflow-wrap: break-word; /* se houver palavras muito longas, elas quebrarão linha */
 `;
 
 // O componente PlanetImage exibe uma imagem animada; em mobile, ela é ocultada.
@@ -148,8 +147,8 @@ const ClientsContent = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column-reverse;
-      gap: 10px;
-    }
+    gap: 10px;
+  }
 `;
 
 // Oculta a imagem do mascote (sput) em mobile
@@ -166,7 +165,7 @@ const MascotWrapper = styled.div`
 `;
 
 const SpeechBubbleWrapper = styled.div`
-  max-width: 600px; 
+  max-width: 600px;
   width: 100%;
   @media (max-width: 768px) {
     /* Faz com que o balão fique alinhado à direita na coluna */
@@ -191,7 +190,7 @@ const RecentProjectsTitle = styled.h2`
 
 const ProjectsContainer = styled.div`
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
 `;
 
@@ -214,7 +213,7 @@ const LogosContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 40px;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   margin-bottom: 40px;
 `;
 
@@ -266,6 +265,16 @@ function ProjetosPage() {
 
   return (
     <>
+      <Helmet>
+        <title>
+          Projetos &amp; Cases | Gameficare Studio – Gamificação e Impacto
+          Social
+        </title>
+        <meta
+          name="description"
+          content="Descubra os cases da Gameficare Studio: jogos mobile para triagem auditiva, plataformas educativas customizadas e soluções gamificadas que geram engajamento e resultados mensuráveis."
+        />
+      </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
 
@@ -292,9 +301,9 @@ function ProjetosPage() {
         </SectionTitle>
 
         <SectionText>
-          Transforme sua experiência digital com soluções gamificadas personalizadas.
-          Da criação de jogos à gamificação de processos e soluções corporativas,
-          estamos prontos para levá-lo ao próximo nível.
+          Transforme sua experiência digital com soluções gamificadas
+          personalizadas. Da criação de jogos à gamificação de processos e
+          soluções corporativas, estamos prontos para levá-lo ao próximo nível.
         </SectionText>
 
         <CardsContainer>
@@ -318,7 +327,7 @@ function ProjetosPage() {
         <ButtonWrapper>
           <CTAButton
             text="SOLICITE UM ORÇAMENTO"
-            onClick={() => window.location.href = '/contato'}
+            onClick={() => (window.location.href = '/contato')}
           />
         </ButtonWrapper>
 
@@ -333,16 +342,15 @@ function ProjetosPage() {
             <img src={sputSvg} alt="Mascote da startup" />
           </MascotWrapper>
           <SpeechBubbleWrapper>
-            
-              <SpeechBubble
-                title="FEEDBACK"
-                slider
-                texts={[
-                  "A Gameficare transformou nosso processo de integração de funcionários em algo muito mais divertido e eficiente!",
-                  "O suporte e a criatividade da equipe foram incríveis. Recomendo a qualquer empresa!",
-                  "Nossos clientes adoraram a abordagem gamificada e interativa que eles desenvolveram!"
-                ]}
-              />
+            <SpeechBubble
+              title="FEEDBACK"
+              slider
+              texts={[
+                'A Gameficare transformou nosso processo de integração de funcionários em algo muito mais divertido e eficiente!',
+                'O suporte e a criatividade da equipe foram incríveis. Recomendo a qualquer empresa!',
+                'Nossos clientes adoraram a abordagem gamificada e interativa que eles desenvolveram!',
+              ]}
+            />
           </SpeechBubbleWrapper>
         </ClientsContent>
       </ClientsSection>

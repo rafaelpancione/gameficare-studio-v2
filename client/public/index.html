@@ -1,78 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
+    <meta name="theme-color" content="#0B40C8" />
 
+    <!-- =========  SEO / Social  ========= -->
+    <title>Gameficare Studio | Jogos, Gamificação e Impacto Social</title>
+    <meta name="description"
+          content="Criamos experiências digitais que unem diversão, educação e impacto social — de jogos multiplataforma a soluções B2B gamificadas."/>
+    <meta name="keywords"
+          content="gamificação, desenvolvimento de jogos, serious games, soluções B2B, Gameficare Studio"/>
+
+    <!-- Open Graph -->
+    <meta property="og:type"         content="website"/>
+    <meta property="og:url"          content="https://www.gameficare.com.br/"/>
+    <meta property="og:site_name"    content="Gameficare Studio"/>
+    <meta property="og:locale"       content="pt_BR"/>
+    <meta property="og:title"        content="Gameficare Studio | Jogos, Gamificação e Impacto Social"/>
+    <meta property="og:description"  content="Transformamos ideias em experiências digitais envolventes que geram resultados mensuráveis."/>
+    <meta property="og:image"        content="https://www.gameficare.com.br/images/og-image.png"/>
+    <meta property="og:image:width"  content="1200"/>
+    <meta property="og:image:height" content="630"/>
+
+    <!-- Twitter (sem @user, mas garante cartão em X/Twitter) -->
+    <meta name="twitter:card"        content="summary_large_image"/>
+    <meta name="twitter:title"       content="Gameficare Studio | Jogos, Gamificação e Impacto Social"/>
+    <meta name="twitter:description" content="Jogos multiplataforma e soluções gamificadas que impulsionam engajamento."/>
+    <meta name="twitter:image"       content="https://www.gameficare.com.br/images/og-image.png"/>
+
+    <link rel="canonical" href="https://www.gameficare.com.br/" />
+
+    <!-- =========  Performance helpers  ========= -->
     <!-- DNS Prefetch -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <!-- Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Carregando as duas fontes em uma única chamada -->
-    <!-- 'Roboto' é amplamente utilizada; 'Press Start 2P' usada em títulos -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- Favicon / Apple Touch -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png">
 
-    <title>Gameficare Studio</title>
-
-   
+    <!-- =========  Critical CSS  ========= -->
     <style>
-      /* Exemplo de inlining de CSS crítico */
-      
-      :root {
-        /* Exemplo de cores */
-        --blue: #3564DA;
-        --dark-blue: #071F56;
-        --header-bg: #0b0b0d;
-        --text-color: #ffffff;
-      }     
-
-      /* Reset/essencial */
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
+      :root{
+        --blue:#3564DA;
+        --dark-blue:#071F56;
+        --header-bg:#0b0b0d;
+        --text-color:#ffffff;
       }
-
-      body {
-        /* Exemplo de cor de fundo inicial */
-        background-color: var(--blue);
-        color: var(--dark-blue);
-        font-family: 'Roboto', sans-serif;
-        overflow-x: hidden;
+      html,body{margin:0;padding:0;box-sizing:border-box;width:100%;height:100%;}
+      body{
+        background-color:var(--blue);
+        color:var(--dark-blue);
+        font-family:'Roboto',sans-serif;
+        overflow-x:hidden;
       }
-
-      /* Exemplo de seção hero acima da dobra */
-      .hero-section {
-        min-height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #141414;
-        color: var(--text-color);
-        text-align: center;
+      .hero-section{
+        min-height:60vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background-color:#141414;
+        color:var(--text-color);
+        text-align:center;
       }
-    
     </style>
-   
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>Você precisa habilitar JavaScript para rodar este app.</noscript>
     <div id="root"></div>
   </body>
 </html>

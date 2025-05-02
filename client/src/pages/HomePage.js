@@ -4,6 +4,7 @@ import React, { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import GlobalStyle from '../styles/GlobalStyle';
+import { Helmet } from 'react-helmet-async';
 
 // Componentes importados
 import StarryBackground from '../components/organisms/StarryBackground';
@@ -100,7 +101,6 @@ const WelcomeText = styled.h1`
   font-size: 1.25rem;
   color: #fff;
   margin: 0;
-
 `;
 
 const Logo = styled.img`
@@ -164,7 +164,7 @@ const SectionTitle = styled.div`
     position: relative;
     z-index: 1;
   }
-    @media (max-width: 768px) {
+  @media (max-width: 768px) {
     padding: 20px 0 0 0;
   }
 `;
@@ -244,6 +244,15 @@ function HomePage() {
 
   return (
     <>
+      <Helmet>
+        <title>
+          Gameficare Studio – Inovação em Jogos e Soluções Gamificadas
+        </title>
+        <meta
+          name="description"
+          content="Desde 2019, a Gameficare Studio une tecnologia e criatividade para criar jogos multiplataforma, soluções B2B e experiências gamificadas que educam, engajam e geram impacto social."
+        />
+      </Helmet>
       <GlobalStyle />
 
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
@@ -277,7 +286,11 @@ function HomePage() {
       <ServicesSection>
         <SectionTitle>
           <h2>NOSSOS SERVIÇOS</h2>
-          <PlanetImage src={planet1Svg} alt="Planeta decorativo" loading="lazy" />
+          <PlanetImage
+            src={planet1Svg}
+            alt="Planeta decorativo"
+            loading="lazy"
+          />
         </SectionTitle>
         <CardsContainer>
           <InfoCard
@@ -296,7 +309,11 @@ function HomePage() {
             description="Da ideia ao lançamento, transformamos sua visão em experiências digitais inesquecíveis!"
           />
         </CardsContainer>
-        <BottomPlanetImage src={planet2Svg} alt="Planeta decorativo" loading="lazy" />
+        <BottomPlanetImage
+          src={planet2Svg}
+          alt="Planeta decorativo"
+          loading="lazy"
+        />
       </ServicesSection>
 
       <FeaturedProjectSection>
@@ -306,7 +323,11 @@ function HomePage() {
         <Suspense fallback={<div>Carregando vídeo...</div>}>
           <VideoPlayer videoId="BvWITplvctQ" />
         </Suspense>
-        <Character3Image src={character3Svg} alt="Personagem flutuante decorativo" loading="lazy" />
+        <Character3Image
+          src={character3Svg}
+          alt="Personagem flutuante decorativo"
+          loading="lazy"
+        />
       </FeaturedProjectSection>
 
       <Footer />

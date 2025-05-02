@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 
 import GlobalStyle from '../styles/GlobalStyle';
 import StarryBackground from '../components/organisms/StarryBackground';
@@ -29,7 +30,6 @@ const Title = styled.h2`
   font-size: ${({ theme }) => theme.typography?.h2 || '2rem'};
   color: ${({ theme }) => theme.colors?.white || '#fff'};
   text-align: center;
-  
 `;
 
 const ContactSection = styled.section`
@@ -51,7 +51,6 @@ const ContactContainer = styled.div`
   gap: ${({ theme }) => (theme.spacing ? theme.spacing(5) : '40px')};
 
   @media (max-width: 768px) {
-    
     align-items: center;
   }
 `;
@@ -68,8 +67,8 @@ const SputmanWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
- 
-   @media (max-width: 1024px) {
+
+  @media (max-width: 1024px) {
     display: none;
   }
   img {
@@ -93,6 +92,15 @@ const DisclaimerBanner = styled.div`
 const ContatoPage = () => {
   return (
     <>
+      <Helmet>
+        <title>
+          Contato | Gameficare Studio – Fale Conosco, Orçamentos e Parcerias
+        </title>
+        <meta
+          name="description"
+          content="Fale com a Gameficare Studio: dúvidas, orçamentos e parcerias."
+        />
+      </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={100} minSize={2} maxSize={15} />
       <Header

@@ -7,7 +7,7 @@ import Footer from '../components/organisms/Footer';
 import SpeechBubble from '../components/atoms/SpeechBubble';
 import SimpleProjectCard from '../components/molecules/SimpleProjectCard';
 import ProgressBar from '../components/atoms/ProgressBar';
-
+import { Helmet } from 'react-helmet-async';
 // Importação de imagens e ícones
 import earthSvg from '../assets/images/earth.svg';
 import moonSvg from '../assets/images/moon.svg'; // Planeta Rosa
@@ -53,19 +53,22 @@ const MobileCardWrapper = styled.div`
 const PageContainer = styled.main`
   max-width: ${({ theme }) => theme.containerMaxWidth || '1200px'};
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing?.(5) || '40px'} ${({ theme }) => theme.spacing?.(2.5) || '20px'};
+  padding: ${({ theme }) => theme.spacing?.(5) || '40px'}
+    ${({ theme }) => theme.spacing?.(2.5) || '20px'};
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing?.(5) || '40px'};
 
   @media (max-width: 768px) {
-    padding: ${({ theme }) => theme.spacing?.(5) || '40px'} ${({ theme }) => theme.spacing?.(5) || '40px'};
+    padding: ${({ theme }) => theme.spacing?.(5) || '40px'}
+      ${({ theme }) => theme.spacing?.(5) || '40px'};
   }
 `;
 
 /* Título centralizado */
 const Title = styled.h2`
-  font-family: ${({ theme }) => theme.fonts?.heading || "'Press Start 2P', cursive"};
+  font-family: ${({ theme }) =>
+    theme.fonts?.heading || "'Press Start 2P', cursive"};
   font-size: ${({ theme }) => theme.typography?.h2 || '2rem'};
   color: ${({ theme }) => theme.colors?.white || '#fff'};
   text-align: center;
@@ -74,7 +77,8 @@ const Title = styled.h2`
 
 /* Texto centralizado com largura máxima */
 const Text = styled.p`
-  font-family: ${({ theme }) => theme.fonts?.body || "'Roboto Mono', monospace"};
+  font-family: ${({ theme }) =>
+    theme.fonts?.body || "'Roboto Mono', monospace"};
   font-size: ${({ theme }) => theme.typography?.body || '1rem'};
   color: ${({ theme }) => theme.colors?.white || '#fff'};
   line-height: 1.6;
@@ -98,11 +102,10 @@ const SecondSection = styled.section`
   grid-template-columns: 1fr 1fr;
   align-items: top;
   position: relative;
-  
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    
+
     padding: 0;
   }
 `;
@@ -163,8 +166,8 @@ const PacWrapper = styled.div`
 
 /* Seção 4: Nossos Valores */
 export const ProgressBarWrapper = styled.div`
- width: 100%;  
-  max-width: 400px; 
+  width: 100%;
+  max-width: 400px;
   margin: 0;
 `;
 
@@ -175,14 +178,14 @@ const ValuesSection = styled.section`
 
 const ValuesContainer = styled.div`
   display: grid;
-   grid-template-columns: 1fr 1fr;  /* 2 colunas iguais no desktop */
- gap: ${({ theme }) => (theme.spacing ? theme.spacing(5) : '40px')};
-   margin-top: ${({ theme }) => (theme.spacing ? theme.spacing(2.5) : '20px')};
+  grid-template-columns: 1fr 1fr; /* 2 colunas iguais no desktop */
+  gap: ${({ theme }) => (theme.spacing ? theme.spacing(5) : '40px')};
+  margin-top: ${({ theme }) => (theme.spacing ? theme.spacing(2.5) : '20px')};
 
-   @media (max-width: 768px) {
-     grid-template-columns: 1fr; /* empilha em uma coluna no mobile */
-     gap: ${({ theme }) => (theme.spacing ? theme.spacing(2.5) : '20px')};
-   }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* empilha em uma coluna no mobile */
+    gap: ${({ theme }) => (theme.spacing ? theme.spacing(2.5) : '20px')};
+  }
 `;
 
 const ValuesColumn = styled.div`
@@ -195,6 +198,15 @@ const ValuesColumn = styled.div`
 function Sobre() {
   return (
     <>
+      <Helmet>
+        <title>
+          Sobre Nós | Gameficare Studio – Gamificação, Jogos e Impacto Social
+        </title>
+        <meta
+          name="description"
+          content="Conheça a Gameficare Studio: desde 2019 unindo tecnologia, gamificação e design de jogos para criar experiências digitais que engajam, educam e geram impacto social."
+        />
+      </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
       <Header
@@ -212,13 +224,14 @@ function Sobre() {
         <AboutSection>
           <Title>SOBRE NÓS</Title>
           <Text>
-            A Gameficare Studio, fundada em 2019, surgiu da paixão de seus fundadores
-            por unir tecnologia, gamificação e jogos, com o objetivo de melhorar o
-            engajamento e a motivação no aprendizado e no desenvolvimento pessoal e
-            profissional. Combinando design de jogos, experiência do usuário e tecnologia,
-            a Gameficare se destacou no mercado de gamificação, conquistando prêmios como
-            o Sinapse da Inovação e a Feira de Ideias da Universidade Tecnológica Federal
-            do Paraná.
+            A Gameficare Studio, fundada em 2019, surgiu da paixão de seus
+            fundadores por unir tecnologia, gamificação e jogos, com o objetivo
+            de melhorar o engajamento e a motivação no aprendizado e no
+            desenvolvimento pessoal e profissional. Combinando design de jogos,
+            experiência do usuário e tecnologia, a Gameficare se destacou no
+            mercado de gamificação, conquistando prêmios como o Sinapse da
+            Inovação e a Feira de Ideias da Universidade Tecnológica Federal do
+            Paraná.
           </Text>
         </AboutSection>
 
@@ -237,7 +250,7 @@ function Sobre() {
             <SpeechBubble
               title="NOSSA MISSÃO"
               texts={[
-                "Criar experiências digitais inovadoras que combinam entretenimento com propósito, transformando o dia a dia de jogadores, empresas e instituições."
+                'Criar experiências digitais inovadoras que combinam entretenimento com propósito, transformando o dia a dia de jogadores, empresas e instituições.',
               ]}
             />
           </DesktopOnly>
@@ -286,11 +299,7 @@ function Sobre() {
                 />
               </ProgressBarWrapper>
               <ProgressBarWrapper>
-                <ProgressBar
-                  color="#071F56"
-                  label="INOVAÇÃO"
-                  progress={100}
-                />
+                <ProgressBar color="#071F56" label="INOVAÇÃO" progress={100} />
               </ProgressBarWrapper>
             </ValuesColumn>
             <ValuesColumn>

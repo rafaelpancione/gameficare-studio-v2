@@ -4,7 +4,7 @@
   
     // Aplicar correções do ESLint ao salvar
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
+      "source.fixAll.eslint": "explicit"
     },
   
     // Prettier como formatador padrão

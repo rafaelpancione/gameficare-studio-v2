@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 // Se "index.css" apenas repete resets já no GlobalStyle, podemos removê-la.
 // Caso ainda tenha regras específicas, incorpore-as no GlobalStyle ou mantenha se necessário.
 import App from './App';
@@ -13,7 +14,9 @@ root.render(
       Retiramos <GlobalStyle /> aqui para evitar duplicidade.
       O GlobalStyle será inserido dentro de App.js (onde já existe ThemeProvider).
     */}
-    <App />
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
   </React.StrictMode>
 );
 
