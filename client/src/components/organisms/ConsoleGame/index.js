@@ -1,8 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { GameWrapper, GameCanvas } from './styles';
+
 import brickImg from '../../../assets/images/game/brick.png';
 import ballImg from '../../../assets/images/game/ball.png';
 import paddleImg from '../../../assets/images/game/paddle.png';
+import sputImg from '../../../assets/images/game/sput.svg';
+import heartFill from '../../../assets/images/game/heart_fill.svg';
+import heartOver from '../../../assets/images/game/heart_over.svg';
 
 function ConsoleGame() {
   const canvasRef = useRef(null);
@@ -12,68 +16,116 @@ function ConsoleGame() {
     const ctx = canvas.getContext('2d');
     let animationId;
 
-    // dimensões do jogo
+    // ── DIMENSÕES ───────────────────────────────────────────
     const GAME_WIDTH = 400;
     const GAME_HEIGHT = 300;
+    const uiHeight = 60;
     const paddleWidth = 60;
     const paddleHeight = 10;
+    const paddleOffsetY = 20;
     const ballSize = 10;
-    const paddleOffsetY = 20; // sobe a raquete 20px
     canvas.width = GAME_WIDTH;
     canvas.height = GAME_HEIGHT;
 
-    // sprites
+    // ── SPRITES ─────────────────────────────────────────────
     const brick = new Image();
     brick.src = brickImg;
     const ball = new Image();
     ball.src = ballImg;
     const paddle = new Image();
     paddle.src = paddleImg;
+    const sput = new Image();
+    sput.src = sputImg;
+    const heartF = new Image();
+    heartF.src = heartFill;
+    const heartO = new Image();
+    heartO.src = heartOver;
 
-    // estado paddle/bola
+    // ── ESTADO ──────────────────────────────────────────────
     let paddleX = (GAME_WIDTH - paddleWidth) / 2;
     let ballX = GAME_WIDTH / 2;
     let ballY = GAME_HEIGHT / 2;
-    let dx = 2,
-      dy = -2;
-
-    // controles
+    let dx = 2;
+    let dy = -2;
     let leftPressed = false;
     let rightPressed = false;
-    function keyDownHandler(e) {
-      if (e.key === 'ArrowLeft') leftPressed = true;
-      if (e.key === 'ArrowRight') rightPressed = true;
-    }
-    function keyUpHandler(e) {
-      if (e.key === 'ArrowLeft') leftPressed = false;
-      if (e.key === 'ArrowRight') rightPressed = false;
-    }
-    document.addEventListener('keydown', keyDownHandler);
-    document.addEventListener('keyup', keyUpHandler);
+    let lives = 3;
+    let state = 'playing'; // 'playing' | 'win' | 'gameover'
 
-    function touchMoveHandler(e) {
-      const rect = canvas.parentNode.getBoundingClientRect();
-      const touchX = e.touches[0].clientX - rect.left;
-      paddleX = Math.max(
-        0,
-        Math.min(touchX - paddleWidth / 2, GAME_WIDTH - paddleWidth)
-      );
-    }
-    canvas.parentNode.addEventListener('touchmove', touchMoveHandler);
-
-    // configuração dos tijolos
+    // ── TIJOLOS ─────────────────────────────────────────────
     const brickRowCount = 3;
     const brickColumnCount = 5;
     const brickWidth = 64;
     const brickHeight = 20;
     const brickPadding = 8;
-    const brickOffsetTop = 30;
+    const brickOffsetTop = uiHeight;
     const brickOffsetLeft = 20;
-    const bricks = [];
-    for (let c = 0; c < brickColumnCount; c++) {
-      bricks[c] = [];
-      for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+    let bricks = [];
+    function initBricks() {
+      bricks = [];
+      for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+          bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+      }
+    }
+    initBricks();
+
+    // ── CONTROLES ───────────────────────────────────────────
+    function keyDownHandler(e) {
+      if (state !== 'playing') {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') restart();
+        return;
+      }
+      if (e.key === 'ArrowLeft') leftPressed = true;
+      if (e.key === 'ArrowRight') rightPressed = true;
+    }
+    function keyUpHandler(e) {
+      if (state === 'playing') {
+        if (e.key === 'ArrowLeft') leftPressed = false;
+        if (e.key === 'ArrowRight') rightPressed = false;
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keyup', keyUpHandler);
+
+    function touchHandler(e) {
+      if (state !== 'playing') {
+        restart();
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      const x = e.touches[0].clientX - rect.left;
+      paddleX = Math.max(
+        0,
+        Math.min(x - paddleWidth / 2, GAME_WIDTH - paddleWidth)
+      );
+    }
+    canvas.addEventListener('touchmove', touchHandler);
+    canvas.addEventListener('touchstart', touchHandler);
+
+    // ── DESENHO UI ──────────────────────────────────────────
+    function drawUI() {
+      // fundo
+      ctx.fillStyle = '#071f56';
+      ctx.fillRect(0, 0, GAME_WIDTH, uiHeight);
+
+      // sput (aumentado e alinhado ao brickOffsetLeft)
+      const sputBase = uiHeight - 20;
+      const sputSize = sputBase * 0.85; // 85% do sputBase
+      const sputX = brickOffsetLeft; // alinhado à esquerda dos bricks
+      ctx.drawImage(sput, sputX, (uiHeight - sputSize) / 2, sputSize, sputSize);
+
+      // corações (50% do tamanho, menos espaçamento)
+      const heartSize = sputBase * 0.5;
+      const gap = 5; // distância menor entre corações
+      const startX = sputX + sputSize + 10;
+      for (let i = 0; i < 3; i++) {
+        const img = i < lives ? heartF : heartO;
+        const x = startX + i * (heartSize + gap);
+        const y = (uiHeight - heartSize) / 2;
+        ctx.drawImage(img, x, y, heartSize, heartSize);
       }
     }
 
@@ -82,11 +134,11 @@ function ConsoleGame() {
         for (let r = 0; r < brickRowCount; r++) {
           const b = bricks[c][r];
           if (b.status === 1) {
-            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-            b.x = brickX;
-            b.y = brickY;
-            ctx.drawImage(brick, brickX, brickY, brickWidth, brickHeight);
+            const bx = c * (brickWidth + brickPadding) + brickOffsetLeft;
+            const by = r * (brickHeight + brickPadding) + brickOffsetTop;
+            b.x = bx;
+            b.y = by;
+            ctx.drawImage(brick, bx, by, brickWidth, brickHeight);
           }
         }
       }
@@ -111,50 +163,73 @@ function ConsoleGame() {
       }
     }
 
+    function drawMessage(text) {
+      ctx.fillStyle = '#fff';
+      ctx.font = "14px 'Press Start 2P'";
+      ctx.textAlign = 'center';
+      ctx.fillText(text, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 10);
+      ctx.font = "10px 'Press Start 2P'";
+      const prompt = window.matchMedia('(pointer: coarse)').matches
+        ? 'TOQUE NA TELA PARA JOGAR NOVAMENTE'
+        : 'TECLE ← OU → PARA JOGAR NOVAMENTE';
+      ctx.fillText(prompt, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20);
+    }
+
+    function restart() {
+      lives = 3;
+      state = 'playing';
+      paddleX = (GAME_WIDTH - paddleWidth) / 2;
+      ballX = GAME_WIDTH / 2;
+      ballY = GAME_HEIGHT / 2;
+      dx = 2;
+      dy = -2;
+      initBricks();
+      draw();
+    }
+
+    // ── LOOP PRINCIPAL ─────────────────────────────────────
     function draw() {
       ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-      // tijolos
+      drawUI();
+      if (state !== 'playing') {
+        drawMessage(state === 'win' ? 'PARABÉNS!' : 'GAME OVER');
+        return;
+      }
+
       drawBricks();
       collisionDetection();
 
-      // move paddle via teclado
+      // mover paddle
       if (rightPressed) paddleX += 5;
       if (leftPressed) paddleX -= 5;
       paddleX = Math.max(0, Math.min(paddleX, GAME_WIDTH - paddleWidth));
 
-      // desenha paddle (com offset Y)
-      ctx.drawImage(
-        paddle,
-        paddleX,
-        GAME_HEIGHT - paddleHeight - paddleOffsetY,
-        paddleWidth,
-        paddleHeight
-      );
+      // desenhar paddle
+      const paddleY = GAME_HEIGHT - paddleHeight - paddleOffsetY;
+      ctx.drawImage(paddle, paddleX, paddleY, paddleWidth, paddleHeight);
 
-      // desenha bola
+      // desenhar bola
       ctx.drawImage(ball, ballX, ballY, ballSize, ballSize);
 
       // colisões
       if (ballX + dx < 0 || ballX + dx > GAME_WIDTH - ballSize) dx = -dx;
-      if (ballY + dy < 0) dy = -dy;
-      else if (
-        ballY + dy + ballSize >
-        GAME_HEIGHT - paddleHeight - paddleOffsetY
-      ) {
-        const paddleTop = GAME_HEIGHT - paddleHeight - paddleOffsetY;
-        const nextBallBottom = ballY + dy + ballSize;
+      if (ballY + dy < uiHeight) dy = -dy;
 
-        if (
-          nextBallBottom >= paddleTop && // atingiu topo da raquete
-          ballY < paddleTop && // não passou o limite
-          ballX + ballSize > paddleX && // dentro dos limites X
-          ballX < paddleX + paddleWidth
-        ) {
-          ballY = paddleTop - ballSize; // reposiciona em cima
+      const nextY = ballY + dy;
+      if (
+        nextY + ballSize >= paddleY &&
+        nextY + ballSize <= paddleY + paddleHeight
+      ) {
+        if (ballX + ballSize > paddleX && ballX < paddleX + paddleWidth) {
+          ballY = paddleY - ballSize;
           dy = -dy;
-        } else if (ballY + dy > GAME_HEIGHT) {
-          // reset se realmente passar do background
+        }
+      } else if (nextY + ballSize > GAME_HEIGHT) {
+        lives--;
+        if (lives <= 0) {
+          state = 'gameover';
+        } else {
           ballX = GAME_WIDTH / 2;
           ballY = GAME_HEIGHT / 2;
           dy = -Math.abs(dy);
@@ -163,6 +238,10 @@ function ConsoleGame() {
 
       ballX += dx;
       ballY += dy;
+
+      if (bricks.flat().every((b) => b.status === 0)) {
+        state = 'win';
+      }
 
       animationId = requestAnimationFrame(draw);
     }
@@ -173,7 +252,8 @@ function ConsoleGame() {
       cancelAnimationFrame(animationId);
       document.removeEventListener('keydown', keyDownHandler);
       document.removeEventListener('keyup', keyUpHandler);
-      canvas.parentNode.removeEventListener('touchmove', touchMoveHandler);
+      canvas.removeEventListener('touchmove', touchHandler);
+      canvas.removeEventListener('touchstart', touchHandler);
     };
   }, []);
 
