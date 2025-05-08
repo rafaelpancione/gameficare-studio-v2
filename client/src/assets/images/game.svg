@@ -59,7 +59,7 @@
           <ellipse cx="62.505" cy="61.368" rx="58.505" ry="57.368" fill="none"/>
         </g>
       </g>
-      <text id="G" transform="translate(32.578 95.609)" font-size="60" font-family="PressStart2P-Regular, 'Press Start \32 P'"><tspan x="0" y="0">G</tspan></text>
+      <path id="G" d="M12135.163,7983.669v-7.584h-37.578v7.584H12090v7.585h-7.24v22.524h7.24v7.355h7.585v7.7h37.578v-30.338h-22.523v7.7h7.814v14.939h-15.284v-7.355h-7.585v-22.524h7.585v-7.585Z" transform="translate(-12050.062 -7940.544)" stroke="#000" stroke-width="1"/>
     </g>
     <g id="btn-f" transform="translate(12193.255 7849.628)">
       <g transform="matrix(1, 0, 0, 1, -1262.76, -295.9)" filter="url(#Elipse_50)">
@@ -68,7 +68,7 @@
           <ellipse cx="60.99" cy="61.368" rx="56.99" ry="57.368" fill="none"/>
         </g>
       </g>
-      <text id="F" transform="translate(31.063 100.155)" font-size="60" font-family="PressStart2P-Regular, 'Press Start \32 P'"><tspan x="0" y="0">F</tspan></text>
+      <path id="Caminho_1407" data-name="Caminho 1407" d="M31.063,92.671H46.14V69.8H76.134V62.447H46.14V47.508H83.374v-7.24H31.063Z" stroke="#000" stroke-width="1"/>
     </g>
     <g id="Grupo_2067" data-name="Grupo 2067" transform="translate(12049.749 7664.432)">
       <path id="Caminho_498" data-name="Caminho 498" d="M9523.47,8475.028c-1.324-7.836-3.151-12.226-5.976-19.655a18.666,18.666,0,0,0-2.5-4.916c-3.407-4.378-23.554-9.5-29.1-9.636l-.134.03c5.547.035,24.444-2.278,27.979-6.553a18.665,18.665,0,0,0,2.643-4.841,97.133,97.133,0,0,0,6.462-20.253h.058a92.621,92.621,0,0,0,6.082,19.848,18.628,18.628,0,0,0,2.643,4.84c3.535,4.275,21.895,7.381,27.439,7.346l.053-.029c-5.546.129-24.774,5.425-28.181,9.8a18.672,18.672,0,0,0-2.5,4.917c-2.824,7.429-3.449,11.265-4.773,19.1" transform="translate(-9485.763 -8409.205)" fill="#fefff0"/>
