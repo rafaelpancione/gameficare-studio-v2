@@ -16,7 +16,6 @@ function ConsoleGame() {
     const ctx = canvas.getContext('2d');
     let animationId;
 
-    // ── DIMENSÕES ───────────────────────────────────────────
     const GAME_WIDTH = 400;
     const GAME_HEIGHT = 300;
     const uiHeight = 60;
@@ -27,7 +26,6 @@ function ConsoleGame() {
     canvas.width = GAME_WIDTH;
     canvas.height = GAME_HEIGHT;
 
-    // ── SPRITES ─────────────────────────────────────────────
     const brick = new Image();
     brick.src = brickImg;
     const ball = new Image();
@@ -41,7 +39,6 @@ function ConsoleGame() {
     const heartO = new Image();
     heartO.src = heartOver;
 
-    // ── ESTADO ──────────────────────────────────────────────
     let paddleX = (GAME_WIDTH - paddleWidth) / 2;
     let ballX = GAME_WIDTH / 2;
     let ballY = GAME_HEIGHT / 2;
@@ -50,9 +47,8 @@ function ConsoleGame() {
     let leftPressed = false;
     let rightPressed = false;
     let lives = 3;
-    let state = 'playing'; // 'playing' | 'win' | 'gameover'
+    let state = 'start'; // 'start' | 'playing' | 'win' | 'gameover'
 
-    // ── TIJOLOS ─────────────────────────────────────────────
     const brickRowCount = 3;
     const brickColumnCount = 5;
     const brickWidth = 64;
@@ -61,6 +57,7 @@ function ConsoleGame() {
     const brickOffsetTop = uiHeight;
     const brickOffsetLeft = 20;
     let bricks = [];
+
     function initBricks() {
       bricks = [];
       for (let c = 0; c < brickColumnCount; c++) {
@@ -72,54 +69,28 @@ function ConsoleGame() {
     }
     initBricks();
 
-    // ── CONTROLES ───────────────────────────────────────────
-    function keyDownHandler(e) {
-      if (state !== 'playing') {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') restart();
-        return;
-      }
-      if (e.key === 'ArrowLeft') leftPressed = true;
-      if (e.key === 'ArrowRight') rightPressed = true;
+    function drawStartScreen() {
+      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      ctx.fillStyle = '#071f56';
+      ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      ctx.fillStyle = '#fff';
+      ctx.font = "14px 'Press Start 2P'";
+      ctx.textAlign = 'center';
+      const text = window.matchMedia('(pointer: coarse)').matches
+        ? 'TOQUE NA TELA PARA JOGAR'
+        : 'TECLE ← OU → PARA JOGAR';
+      ctx.fillText(text, GAME_WIDTH / 2, GAME_HEIGHT / 2);
     }
-    function keyUpHandler(e) {
-      if (state === 'playing') {
-        if (e.key === 'ArrowLeft') leftPressed = false;
-        if (e.key === 'ArrowRight') rightPressed = false;
-      }
-    }
-    document.addEventListener('keydown', keyDownHandler);
-    document.addEventListener('keyup', keyUpHandler);
 
-    function touchHandler(e) {
-      if (state !== 'playing') {
-        restart();
-        return;
-      }
-      const rect = canvas.getBoundingClientRect();
-      const x = e.touches[0].clientX - rect.left;
-      paddleX = Math.max(
-        0,
-        Math.min(x - paddleWidth / 2, GAME_WIDTH - paddleWidth)
-      );
-    }
-    canvas.addEventListener('touchmove', touchHandler);
-    canvas.addEventListener('touchstart', touchHandler);
-
-    // ── DESENHO UI ──────────────────────────────────────────
     function drawUI() {
-      // fundo
       ctx.fillStyle = '#071f56';
       ctx.fillRect(0, 0, GAME_WIDTH, uiHeight);
-
-      // sput (aumentado e alinhado ao brickOffsetLeft)
       const sputBase = uiHeight - 20;
-      const sputSize = sputBase * 0.85; // 85% do sputBase
-      const sputX = brickOffsetLeft; // alinhado à esquerda dos bricks
+      const sputSize = sputBase * 0.85;
+      const sputX = brickOffsetLeft;
       ctx.drawImage(sput, sputX, (uiHeight - sputSize) / 2, sputSize, sputSize);
-
-      // corações (50% do tamanho, menos espaçamento)
       const heartSize = sputBase * 0.5;
-      const gap = 5; // distância menor entre corações
+      const gap = 5;
       const startX = sputX + sputSize + 10;
       for (let i = 0; i < 3; i++) {
         const img = i < lives ? heartF : heartO;
@@ -175,44 +146,22 @@ function ConsoleGame() {
       ctx.fillText(prompt, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 20);
     }
 
-    function restart() {
-      lives = 3;
-      state = 'playing';
-      paddleX = (GAME_WIDTH - paddleWidth) / 2;
-      ballX = GAME_WIDTH / 2;
-      ballY = GAME_HEIGHT / 2;
-      dx = 2;
-      dy = -2;
-      initBricks();
-      draw();
-    }
-
-    // ── LOOP PRINCIPAL ─────────────────────────────────────
     function draw() {
       ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
       drawUI();
       if (state !== 'playing') {
         drawMessage(state === 'win' ? 'PARABÉNS!' : 'GAME OVER');
         return;
       }
-
       drawBricks();
       collisionDetection();
-
-      // mover paddle
       if (rightPressed) paddleX += 5;
       if (leftPressed) paddleX -= 5;
       paddleX = Math.max(0, Math.min(paddleX, GAME_WIDTH - paddleWidth));
-
-      // desenhar paddle
       const paddleY = GAME_HEIGHT - paddleHeight - paddleOffsetY;
       ctx.drawImage(paddle, paddleX, paddleY, paddleWidth, paddleHeight);
-
-      // desenhar bola
       ctx.drawImage(ball, ballX, ballY, ballSize, ballSize);
 
-      // colisões
       if (ballX + dx < 0 || ballX + dx > GAME_WIDTH - ballSize) dx = -dx;
       if (ballY + dy < uiHeight) dy = -dy;
 
@@ -246,7 +195,51 @@ function ConsoleGame() {
       animationId = requestAnimationFrame(draw);
     }
 
-    draw();
+    function restart() {
+      lives = 3;
+      state = 'playing';
+      paddleX = (GAME_WIDTH - paddleWidth) / 2;
+      ballX = GAME_WIDTH / 2;
+      ballY = GAME_HEIGHT / 2;
+      dx = 2;
+      dy = -2;
+      initBricks();
+      draw();
+    }
+
+    function keyDownHandler(e) {
+      if (state !== 'playing') {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') restart();
+        return;
+      }
+      if (e.key === 'ArrowLeft') leftPressed = true;
+      if (e.key === 'ArrowRight') rightPressed = true;
+    }
+    function keyUpHandler(e) {
+      if (state === 'playing') {
+        if (e.key === 'ArrowLeft') leftPressed = false;
+        if (e.key === 'ArrowRight') rightPressed = false;
+      }
+    }
+    function touchHandler(e) {
+      if (state !== 'playing') {
+        restart();
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      const x = e.touches[0].clientX - rect.left;
+      paddleX = Math.max(
+        0,
+        Math.min(x - paddleWidth / 2, GAME_WIDTH - paddleWidth)
+      );
+    }
+
+    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keyup', keyUpHandler);
+    canvas.addEventListener('touchmove', touchHandler);
+    canvas.addEventListener('touchstart', touchHandler);
+
+    drawStartScreen();
 
     return () => {
       cancelAnimationFrame(animationId);
