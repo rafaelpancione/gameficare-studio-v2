@@ -186,8 +186,9 @@ function ConsoleGame() {
 
       if (state === 'win') {
         ctx.font = "10px 'Press Start 2P'";
+
         ctx.fillText(
-          `Score: ${score - timeBonus - lifeBonus}`,
+          `Base: ${score - timeBonus - lifeBonus}`,
           GAME_WIDTH / 2,
           GAME_HEIGHT / 2 - 5
         );
@@ -201,6 +202,7 @@ function ConsoleGame() {
           GAME_WIDTH / 2,
           GAME_HEIGHT / 2 + 25
         );
+
         ctx.fillText(`Total: ${score}`, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 45);
       } else {
         ctx.font = "10px 'Press Start 2P'";
@@ -213,6 +215,7 @@ function ConsoleGame() {
         : 'TECLE ← OU → PARA JOGAR NOVAMENTE';
       ctx.fillText(prompt, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 65);
     }
+
     function draw() {
       ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
       drawUI();

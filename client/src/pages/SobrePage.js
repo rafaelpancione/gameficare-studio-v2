@@ -226,12 +226,11 @@ function Sobre() {
           <Text>
             A Gameficare Studio, fundada em 2019, surgiu da paixão de seus
             fundadores por unir tecnologia, gamificação e jogos, com o objetivo
-            de melhorar o engajamento e a motivação no aprendizado e no
-            desenvolvimento pessoal e profissional. Combinando design de jogos,
-            experiência do usuário e tecnologia, a Gameficare se destacou no
-            mercado de gamificação, conquistando prêmios como o Sinapse da
-            Inovação e a Feira de Ideias da Universidade Tecnológica Federal do
-            Paraná.
+            de melhorar o engajamento e a motivação no desenvolvimento pessoal e
+            profissional. Combinando design de jogos, experiência do usuário e
+            tecnologia, a Gameficare se destacou no mercado de gamificação,
+            conquistando prêmios como o Sinapse da Inovação e a Feira de Ideias
+            da Universidade Tecnológica Federal do Paraná.
           </Text>
         </AboutSection>
 
@@ -269,7 +268,7 @@ function Sobre() {
           <CardWrapper>
             <SimpleProjectCard
               title="NOSSA VISÃO"
-              description="Ser referência na criação de jogos e soluções gamificadas inovadoras, unindo entretenimento, educação e impacto social."
+              description="Ser referência na criação de jogos e soluções gamificadas inovadoras, unindo entretenimento, engajamento e impacto social."
             />
           </CardWrapper>
           <DesktopOnly>

@@ -24,19 +24,19 @@ const ProjectCard = ({ image, title, description, link }) => (
     <Content>
       <Title id="project-title">{title}</Title>
       <Description aria-describedby="project-title">{description}</Description>
-      <LearnMore 
-        href={link} 
-        aria-label={`Saiba mais sobre ${title}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        SAIBA MAIS
-        <ArrowIcon aria-hidden="true">&rarr;</ArrowIcon>
-      </LearnMore>
+      {link && (
+        <LearnMore
+          href={link}
+          aria-label={`Saiba mais sobre ${title}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          SAIBA MAIS
+          <ArrowIcon aria-hidden="true">&rarr;</ArrowIcon>
+        </LearnMore>
+      )}
     </Content>
   </Card>
 );
-
-// ... PropTypes permanecem iguais
 
 export default ProjectCard;

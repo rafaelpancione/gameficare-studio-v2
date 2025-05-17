@@ -360,9 +360,9 @@ function ProjetosPage() {
               title="FEEDBACK"
               slider
               texts={[
-                'A Gameficare transformou nosso processo de integração de funcionários em algo muito mais divertido e eficiente!',
-                'O suporte e a criatividade da equipe foram incríveis. Recomendo a qualquer empresa!',
-                'Nossos clientes adoraram a abordagem gamificada e interativa que eles desenvolveram!',
+                '"Pessoal, que jogo fantástico! Muito bacana, de verdade! Parabéns!"',
+                '"Completamente apaixonada no gráfico, em cada detalhe!"',
+                '"Os designs dos jogos ficaram lindos."',
               ]}
             />
           </SpeechBubbleWrapper>
@@ -376,19 +376,19 @@ function ProjetosPage() {
           <ProjectCard
             description="Sonora é um jogo para dispositivo móveis para auxiliar na triagem auditiva, uma maneira simples, prática e lúdica que tem o potencial de ajudar a melhorar o desenvolvimento social de milhares de crianças e jovens em todo país."
             image={img1Png}
-            link="#"
+            link=""
             title="SONORA"
           />
           <ProjectCard
             description="Cliente responsável por disponibilizar de uma plataforma educacional para algumas cidades com notoriedade no Brasil como São Paulo, Salvador, Caucáia e Maringá. Este projeto consistiu na entrega de layouts para jogos customizados de acordo com a necessidade do cliente, respeitando a identidade visual e consistência através de assets que irão compor jogos que serão incorporados no acervo do cliente."
             image={img2Png}
-            link="#"
+            link=""
             title="LAYOUTS PERSONALIZADOS"
           />
           <ProjectCard
             description="Este jogo foi desenvolvido sob demanda de um cliente para o segmento educacional, onde o jogador estuda matemática se divertindo com as aventuras de Sonora. Ele pode ser executado tanto para apenas um jogador como para 4 simultâneos, além de estar integrado com hardware do cliente que é distribuído para diversas cidades do Brasil."
             image={img3Png}
-            link="#"
+            link=""
             title="APRENDENDO COM SONORA"
           />
         </ProjectsContainer>
