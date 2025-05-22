@@ -41,10 +41,10 @@ const planetSwingAnimation = keyframes`
 
 // ============== SEÇÃO 1: CONSOLE EM DESTAQUE ==================
 const ConsoleSection = styled.section`
-  height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  lign-items: center;
 `;
 
 const ConsoleImage = styled.img`
@@ -54,9 +54,10 @@ const ConsoleImage = styled.img`
 `;
 
 const ConsoleContainer = styled.div`
-  width: 70%; /* mesmo width do ConsoleImage antes */
+  width: 100%;
+  max-width: 1100px; /* limita para que não fique enorme em wides */
   position: relative; /* referência para o GameWrapper */
-  display: flex; /* opcional se precisar de alignments */
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
