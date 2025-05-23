@@ -19,7 +19,6 @@ import img1Png from '../assets/images/img1.webp';
 import img2Png from '../assets/images/img2.webp';
 import img3Png from '../assets/images/img3.webp';
 import logoPlaySvg from '../assets/images/play.svg';
-import logoAthevaSvg from '../assets/images/atheva.svg';
 import logoSinapseSvg from '../assets/images/sinapse.svg';
 import logoPlaymoveSvg from '../assets/images/playmove.svg';
 import { ReactComponent as ControleSvg } from '../assets/images/controle.svg';
