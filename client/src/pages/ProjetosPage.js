@@ -400,7 +400,6 @@ function ProjetosPage() {
         <FinalSectionTitle>NOSSOS CLIENTES</FinalSectionTitle>
         <LogosContainer>
           <LogoItem src={logoPlaySvg} alt="Play Table" />
-          <LogoItem src={logoAthevaSvg} alt="Atheva" />
           <LogoItem src={logoSinapseSvg} alt="Sinapse da Inovação" />
           <LogoItem src={logoPlaymoveSvg} alt="Playmove" />
         </LogosContainer>
