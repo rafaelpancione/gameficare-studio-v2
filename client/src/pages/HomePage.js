@@ -321,7 +321,7 @@ function HomePage() {
           <h2>PROJETO EM DESTAQUE</h2>
         </SectionTitle>
         <Suspense fallback={<div>Carregando vídeo...</div>}>
-          <VideoPlayer videoId="BvWITplvctQ" />
+          <VideoPlayer videoId="5fSc_gw0tU0" />
         </Suspense>
         <Character3Image
           src={character3Svg}

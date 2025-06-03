@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import StarryBackground from '../components/organisms/StarryBackground';
-import Header from '../components/organisms//Header';
+import Header from '../components/organisms/Header';
 import Footer from '../components/organisms/Footer';
 import GlobalStyle from '../styles/GlobalStyle';
 import CTAButton from '../components/atoms/CTAButton';
