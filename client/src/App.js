@@ -14,6 +14,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const SobrePage = lazy(() => import('./pages/SobrePage'));
 const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
 const ContatoPage = lazy(() => import('./pages/ContatoPage'));
+const FolderReader = lazy(() => import('./pages/FolderReader'));
 
 function App() {
   useEffect(() => {
@@ -97,6 +98,7 @@ function App() {
             <Route path="/sobre" element={<SobrePage />} />
             <Route path="/projetos" element={<ProjetosPage />} />
             <Route path="/contato" element={<ContatoPage />} />
+             <Route path="/folder" element={<FolderReader />} />
           </Routes>
         </Suspense>
       </Router>
