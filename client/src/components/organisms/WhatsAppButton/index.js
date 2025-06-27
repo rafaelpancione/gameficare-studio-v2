@@ -12,17 +12,8 @@ import balaoSput from '../../../assets/images/balao-sput.svg';
 const WhatsAppButtonComponent = () => {
   const [showBalloon, setShowBalloon] = useState(true);
 
-  // Verifica se o balão já foi fechado anteriormente
-  useEffect(() => {
-    const balloonClosed = localStorage.getItem('whatsapp-balloon-closed');
-    if (balloonClosed === 'true') {
-      setShowBalloon(false);
-    }
-  }, []);
-
   const handleCloseBalloon = () => {
     setShowBalloon(false);
-    localStorage.setItem('whatsapp-balloon-closed', 'true');
   };
 
   const handleWhatsAppClick = () => {

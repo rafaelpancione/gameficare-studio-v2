@@ -27,11 +27,15 @@ export const WhatsAppContainer = styled.div`
   position: fixed;
   bottom: 10px;
   right: 30px;
-  z-index: 1000;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 0px;
+  /* Debug: garantir que seja visível */
+  background: rgba(255, 0, 0, 0.3);
+  padding: 10px;
+  border: 2px solid red;
 `;
 
 export const WhatsAppButton = styled.button`
@@ -69,7 +73,7 @@ export const WhatsAppButton = styled.button`
 export const BalloonContainer = styled.div`
   position: relative;
   animation: ${fadeIn} 0.5s ease-out;
-  margin-bottom: 10px;
+  
 
   img {
     width: 360px;
