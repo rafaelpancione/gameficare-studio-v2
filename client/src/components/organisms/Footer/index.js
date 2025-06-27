@@ -71,14 +71,14 @@ const Footer = () => {
               <ContactAddress>
                 <p>
                   E-mail:{' '}
-                  <ContactLink href="mailto:contato@gameficare.com">
-                    contato@gameficare.com
+                  <ContactLink href="mailto:contato@gameficare.com.br">
+                    contato@gameficare.com.br
                   </ContactLink>
                 </p>
                 <p>
                   Telefone:{' '}
-                  <ContactLink href="tel:+554799985711">
-                    +55 47 9998-5711
+                  <ContactLink href="tel:+554799955711">
+                    +55 47 9995-5711
                   </ContactLink>
                 </p>
               </ContactAddress>
