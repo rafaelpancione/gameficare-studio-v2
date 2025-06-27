@@ -285,6 +285,10 @@ function ProjetosPage() {
           name="description"
           content="Descubra os cases da Gameficare Studio: jogos mobile para triagem auditiva, plataformas educativas customizadas e soluções gamificadas que geram engajamento e resultados mensuráveis."
         />
+        <link
+          rel="canonical"
+          href="https://www.gameficare.com.br/projetos"
+        />
       </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={150} minSize={3} maxSize={30} />

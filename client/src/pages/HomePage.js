@@ -252,6 +252,10 @@ function HomePage() {
           name="description"
           content="Desde 2019, a Gameficare Studio une tecnologia e criatividade para criar jogos multiplataforma, soluções B2B e experiências gamificadas que educam, engajam e geram impacto social."
         />
+        <link
+          rel="canonical"
+          href="https://www.gameficare.com.br/"
+        />
       </Helmet>
       <GlobalStyle />
 

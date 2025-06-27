@@ -100,6 +100,10 @@ const ContatoPage = () => {
           name="description"
           content="Fale com a Gameficare Studio: dúvidas, orçamentos e parcerias."
         />
+        <link
+          rel="canonical"
+          href="https://www.gameficare.com.br/contato"
+        />
       </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={100} minSize={2} maxSize={15} />

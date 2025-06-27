@@ -206,6 +206,10 @@ function Sobre() {
           name="description"
           content="Conheça a Gameficare Studio: desde 2019 unindo tecnologia, gamificação e design de jogos para criar experiências digitais que engajam, educam e geram impacto social."
         />
+        <link
+          rel="canonical"
+          href="https://www.gameficare.com.br/sobre"
+        />
       </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
