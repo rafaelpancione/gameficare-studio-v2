@@ -27,18 +27,3 @@ Acesse a versão online em: [https://www.gameficare.com.br](https://www.gamefica
 - **Hospedagem**: Vercel (configuração de CI/CD)
 
 ---
-
-## Screenshots  
-<p align="center">
-  <img src="./screenshots/home.png" alt="Home" width="600" />
-  <br/>
-  <em>Página inicial com banner e menu responsivo</em>
-</p>
-
-<p align="center">
-  <img src="./screenshots/projetos.png" alt="Projetos" width="600" />
-  <br/>
-  <em>Seção de portfólio — galeria de projetos</em>
-</p>
-
----
