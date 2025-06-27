@@ -74,7 +74,6 @@ export const BalloonContainer = styled.div`
   position: relative;
   animation: ${fadeIn} 0.5s ease-out;
   
-
   img {
     width: 360px;
     height: auto;
