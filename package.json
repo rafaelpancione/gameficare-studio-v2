@@ -3,9 +3,11 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-      "start": "npm --prefix client start",
-      "build": "npm --prefix client build",
-      "lint":  "npm --prefix client lint"
+        "start": "npm --prefix client start",
+        "build": "npm --prefix client build",
+        "lint": "npm --prefix client lint"
+    },
+    "devDependencies": {
+        "eslint": "^8.57.1"
     }
-  }
-  
+}
