@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 export const Card = styled.div`
   display: flex;
   align-items: stretch;
@@ -24,8 +23,6 @@ export const Card = styled.div`
 `;
 
 export const ImageContainer = styled.div`
-
-  
   position: relative;
   background: ${({ theme }) => theme.colors?.black + '15' || 'rgba(0,0,0,0.1)'};
 
@@ -36,11 +33,11 @@ export const ImageContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-  img {
-    height: 100%;
-    display: block;
+    img {
+      height: 100%;
+      display: block;
+    }
   }
-   }
 `;
 
 export const Content = styled.div`
@@ -48,7 +45,7 @@ export const Content = styled.div`
   padding: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   flex-direction: column;
- justify-content: space-between; 
+  justify-content: space-between;
   height: 100%;
 `;
 
@@ -62,17 +59,21 @@ export const Title = styled.h3`
 
 export const Description = styled.p`
   font-family: 'Roboto Mono', monospace;
-  font-size: clamp(0.875rem, 0.9vw + 0.7rem, 0.95rem); /* Redução sutil no tamanho */
+  font-size: clamp(
+    0.875rem,
+    0.9vw + 0.7rem,
+    0.95rem
+  ); /* Redução sutil no tamanho */
   color: ${({ theme }) => theme.colors?.black || '#000'};
   margin: 0 0 1.25rem;
   line-height: 1.5;
   flex-grow: 1; /* Ocupa espaço disponível */
   display: -webkit-box;
- 
-   -webkit-line-clamp: 6; /* Aumenta número de linhas visíveis */
+
+  -webkit-line-clamp: 6; /* Aumenta número de linhas visíveis */
   -webkit-box-orient: vertical;
   overflow: hidden;
-  
+
   @media (max-width: 768px) {
     -webkit-line-clamp: 4;
   }
@@ -111,5 +112,28 @@ export const ArrowIcon = styled.span`
   ${LearnMore}:hover & {
     transform: translateX(3px);
     color: inherit;
+  }
+`;
+
+export const ComingSoonFlag = styled.div`
+  font-family: 'Press Start 2P', cursive;
+  font-size: clamp(0.75rem, 0.8vw + 0.6rem, 0.85rem);
+  color: ${({ theme }) => theme.colors?.white || '#FFFFFF'};
+  background-color: ${({ theme }) => theme.colors?.black || '#000'};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: auto; /* Empurra para baixo */
+  padding: 0.5rem 1rem;
+  border: 2px solid ${({ theme }) => theme.colors?.black || '#000'};
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 120px;
+
+  @media (max-width: 768px) {
+    min-width: 100px;
+    font-size: clamp(0.7rem, 0.75vw + 0.55rem, 0.8rem);
   }
 `;

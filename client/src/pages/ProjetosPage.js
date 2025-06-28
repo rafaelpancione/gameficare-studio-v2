@@ -18,6 +18,7 @@ import sputSvg from '../assets/images/sput.svg';
 import img1Png from '../assets/images/img1.webp';
 import img2Png from '../assets/images/img2.webp';
 import img3Png from '../assets/images/img3.webp';
+import sputAdventureEduPng from '../assets/images/sput-adventure-edu.png';
 import logoPlaySvg from '../assets/images/play.svg';
 import logoSinapseSvg from '../assets/images/sinapse.svg';
 import logoPlaymoveSvg from '../assets/images/playmove.svg';
@@ -285,10 +286,7 @@ function ProjetosPage() {
           name="description"
           content="Descubra os cases da Gameficare Studio: jogos mobile para triagem auditiva, plataformas educativas customizadas e soluções gamificadas que geram engajamento e resultados mensuráveis."
         />
-        <link
-          rel="canonical"
-          href="https://www.gameficare.com.br/projetos"
-        />
+        <link rel="canonical" href="https://www.gameficare.com.br/projetos" />
       </Helmet>
       <GlobalStyle />
       <StarryBackground starCount={150} minSize={3} maxSize={30} />
@@ -394,6 +392,13 @@ function ProjetosPage() {
             image={img3Png}
             link=""
             title="APRENDENDO COM SONORA"
+          />
+          <ProjectCard
+            description="É uma plataforma de Game-Based Learning que organiza conteúdos de Computação em trilhas gamificadas, combinando mini-jogos, quizzes, leituras, vídeos, podcasts entre outras ferramentas para engajar alunos em desafios interativos."
+            image={sputAdventureEduPng}
+            link=""
+            title="SPUT ADVENTURE EDU"
+            showComingSoon={true}
           />
         </ProjectsContainer>
       </RecentProjectsSection>
