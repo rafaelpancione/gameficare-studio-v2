@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
+import { useCookieConsent } from '../../../contexts/CookieConsentContext';
 import {
   WhatsAppContainer,
   WhatsAppButton,
@@ -11,6 +12,7 @@ import balaoSput from '../../../assets/images/balao-sput.svg';
 
 const WhatsAppButtonComponent = () => {
   const [showBalloon, setShowBalloon] = useState(true);
+  const { hasConsented } = useCookieConsent();
 
   const handleCloseBalloon = () => {
     setShowBalloon(false);
@@ -23,6 +25,11 @@ const WhatsAppButtonComponent = () => {
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
+
+  // Se o usuário não deu consentimento, não renderiza o componente
+  if (!hasConsented) {
+    return null;
+  }
 
   return (
     <WhatsAppContainer>
