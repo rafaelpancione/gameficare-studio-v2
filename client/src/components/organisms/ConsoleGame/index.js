@@ -99,18 +99,65 @@ function ConsoleGame() {
     // bolas
     let balls = [createBallAtPaddle()];
 
+    // Função para desenhar botão no estilo CTAButton
+    function drawButton(text, x, y, width = 200, height = 50) {
+      // Fundo do botão (amarelo)
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(x, y, width, height);
+
+      // Borda do botão
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, width, height);
+
+      // Sombra do botão (5px 5px)
+      ctx.fillStyle = '#000';
+      ctx.fillRect(x + 5, y + 5, width, height);
+
+      // Botão principal (sobre a sombra)
+      ctx.fillStyle = '#FFD700';
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeRect(x, y, width, height);
+
+      // Texto do botão
+      ctx.fillStyle = '#000';
+      ctx.font = "12px 'Press Start 2P'";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x + width / 2, y + height / 2);
+    }
+
+    // Função para verificar se um clique/touch está dentro do botão
+    function isButtonClicked(
+      mouseX,
+      mouseY,
+      buttonX,
+      buttonY,
+      buttonWidth = 200,
+      buttonHeight = 50
+    ) {
+      return (
+        mouseX >= buttonX &&
+        mouseX <= buttonX + buttonWidth &&
+        mouseY >= buttonY &&
+        mouseY <= buttonY + buttonHeight
+      );
+    }
+
+    // Posição do botão (centralizado)
+    const buttonWidth = 200;
+    const buttonHeight = 50;
+    const buttonX = (GAME_WIDTH - buttonWidth) / 2;
+    const buttonY = GAME_HEIGHT / 2 + 60;
+
     // desenho telas
     function drawStartScreen() {
       ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
       ctx.fillStyle = '#071f56';
       ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-      ctx.fillStyle = '#fff';
-      ctx.font = "14px 'Press Start 2P'";
-      ctx.textAlign = 'center';
-      const text = window.matchMedia('(pointer: coarse)').matches
-        ? 'TOQUE NA TELA PARA JOGAR'
-        : 'TECLE ← OU → PARA JOGAR';
-      ctx.fillText(text, GAME_WIDTH / 2, GAME_HEIGHT / 2);
+
+      // Desenha o botão JOGAR
+      drawButton('JOGAR', buttonX, buttonY, buttonWidth, buttonHeight);
     }
 
     function drawUI() {
@@ -192,10 +239,14 @@ function ConsoleGame() {
         ctx.fillText(`Score: ${score}`, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 5);
       }
 
-      const prompt = window.matchMedia('(pointer: coarse)').matches
-        ? 'TOQUE NA TELA PARA JOGAR NOVAMENTE'
-        : 'TECLE ← OU → PARA JOGAR NOVAMENTE';
-      ctx.fillText(prompt, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 65);
+      // Desenha o botão JOGAR NOVAMENTE
+      drawButton(
+        'JOGAR NOVAMENTE',
+        buttonX,
+        buttonY,
+        buttonWidth,
+        buttonHeight
+      );
     }
 
     // colisão tijolos
@@ -336,23 +387,141 @@ function ConsoleGame() {
         if (e.key === 'ArrowRight') rightPressed = false;
       }
     }
-    function touchHandler(e) {
+
+    // Função para lidar com cliques no botão
+    function handleButtonClick(mouseX, mouseY) {
       if (state !== 'playing') {
-        restart();
+        if (
+          isButtonClicked(
+            mouseX,
+            mouseY,
+            buttonX,
+            buttonY,
+            buttonWidth,
+            buttonHeight
+          )
+        ) {
+          restart();
+        }
         return;
       }
+    }
+
+    // Event listener para cliques do mouse
+    function mouseClickHandler(e) {
       const rect = canvas.getBoundingClientRect();
-      const x = e.touches[0].clientX - rect.left;
-      paddleX = Math.max(
-        0,
-        Math.min(x - paddleWidth / 2, GAME_WIDTH - paddleWidth)
-      );
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      handleButtonClick(mouseX, mouseY);
+    }
+
+    // Função unificada para touch (simplificada)
+    function unifiedTouchHandler(e) {
+      if (state !== 'playing') {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const rect = canvas.getBoundingClientRect();
+
+        // Verificação de segurança para evitar erro de undefined
+        let touchX, touchY;
+
+        if (e.touches && e.touches.length > 0) {
+          touchX = e.touches[0].clientX - rect.left;
+          touchY = e.touches[0].clientY - rect.top;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+          touchX = e.changedTouches[0].clientX - rect.left;
+          touchY = e.changedTouches[0].clientY - rect.top;
+        } else {
+          console.log('No touch data available:', e);
+          return;
+        }
+
+        // Calcular escala se o canvas foi redimensionado
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
+        // Aplicar escala às coordenadas de toque
+        const scaledTouchX = touchX * scaleX;
+        const scaledTouchY = touchY * scaleY;
+
+        console.log('Touch coordinates:', {
+          originalTouchX: touchX,
+          originalTouchY: touchY,
+          scaledTouchX,
+          scaledTouchY,
+          scaleX,
+          scaleY,
+          buttonX,
+          buttonY,
+          state,
+          type: e.type,
+        });
+
+        // Log adicional para debug do botão
+        const buttonRight = buttonX + buttonWidth;
+        const buttonBottom = buttonY + buttonHeight;
+        const isClicked = isButtonClicked(
+          scaledTouchX,
+          scaledTouchY,
+          buttonX,
+          buttonY,
+          buttonWidth,
+          buttonHeight
+        );
+
+        console.log('Button bounds:', {
+          buttonX,
+          buttonY,
+          buttonRight,
+          buttonBottom,
+          buttonWidth,
+          buttonHeight,
+          scaledTouchX,
+          scaledTouchY,
+          isClicked,
+          touchInX: scaledTouchX >= buttonX && scaledTouchX <= buttonRight,
+          touchInY: scaledTouchY >= buttonY && scaledTouchY <= buttonBottom,
+        });
+
+        if (isClicked) {
+          console.log('Button clicked! Restarting game...');
+          restart();
+          return;
+        }
+      }
+
+      // Se está jogando, controla o paddle
+      if (state === 'playing' && e.touches && e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        const scaleX = canvas.width / rect.width;
+        const scaledX = x * scaleX;
+        paddleX = Math.max(
+          0,
+          Math.min(scaledX - paddleWidth / 2, GAME_WIDTH - paddleWidth)
+        );
+      }
+    }
+
+    // Função para controle do paddle (apenas quando está jogando)
+    function paddleTouchHandler(e) {
+      if (state === 'playing') {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        paddleX = Math.max(
+          0,
+          Math.min(x - paddleWidth / 2, GAME_WIDTH - paddleWidth)
+        );
+      }
     }
 
     document.addEventListener('keydown', keyDownHandler);
     document.addEventListener('keyup', keyUpHandler);
-    canvas.addEventListener('touchmove', touchHandler);
-    canvas.addEventListener('touchstart', touchHandler);
+    canvas.addEventListener('touchmove', paddleTouchHandler);
+    canvas.addEventListener('touchstart', unifiedTouchHandler);
+    canvas.addEventListener('touchend', unifiedTouchHandler);
+    canvas.addEventListener('click', mouseClickHandler);
 
     drawStartScreen();
 
@@ -360,8 +529,10 @@ function ConsoleGame() {
       cancelAnimationFrame(animationId);
       document.removeEventListener('keydown', keyDownHandler);
       document.removeEventListener('keyup', keyUpHandler);
-      canvas.removeEventListener('touchmove', touchHandler);
-      canvas.removeEventListener('touchstart', touchHandler);
+      canvas.removeEventListener('touchmove', paddleTouchHandler);
+      canvas.removeEventListener('touchstart', unifiedTouchHandler);
+      canvas.removeEventListener('touchend', unifiedTouchHandler);
+      canvas.removeEventListener('click', mouseClickHandler);
     };
   }, []);
 

@@ -25,4 +25,11 @@ export const GameCanvas = styled.canvas`
   width: 100%;
   height: 100%;
   display: block;
+  touch-action: manipulation; /* Melhora a responsividade do touch */
+  -webkit-touch-callout: none; /* Remove o menu de contexto no iOS */
+  -webkit-user-select: none; /* Remove seleção de texto no iOS */
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 `;
