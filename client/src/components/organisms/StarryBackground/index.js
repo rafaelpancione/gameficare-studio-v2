@@ -13,7 +13,7 @@ const StarryBackground = ({
   });
   const isMobile = dimensions.width <= 768;
 
-  // Reduz em 80% o número de estrelas em mobile
+  // Reduz em 90% o número de estrelas em mobile
   const computedStarCount = isMobile ? Math.round(starCount * 0.1) : starCount;
 
   const calculatePositions = useMemo(() => {
