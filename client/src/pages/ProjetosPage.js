@@ -49,7 +49,7 @@ const ConsoleSection = styled.section`
 
 const ConsoleImage = styled.img`
   width: 100%;
-  display: block
+  display: block;
   z-index: 1;
 `;
 
