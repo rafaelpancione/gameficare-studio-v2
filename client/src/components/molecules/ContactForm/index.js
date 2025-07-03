@@ -14,9 +14,7 @@ import {
   SubmitButton,
   ArrowIcon,
 } from './styles';
-const ArrowDownSVG = React.lazy(
-  () => import('../../../assets/icons/arrow-down.svg')
-);
+import ArrowDownSVG from '../../../assets/icons/arrow-down.svg';
 
 const ContactForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
