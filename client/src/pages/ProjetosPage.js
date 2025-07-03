@@ -44,7 +44,7 @@ const ConsoleSection = styled.section`
   width: 100%;
   display: flex;
   justify-content: center;
-  lign-items: center;
+  align-items: center;
 `;
 
 const ConsoleImage = styled.img`
