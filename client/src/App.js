@@ -18,7 +18,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const SobrePage = lazy(() => import('./pages/SobrePage'));
 const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
 const ContatoPage = lazy(() => import('./pages/ContatoPage'));
-const FolderReader = lazy(() => import('./pages/FolderReader'));
+const JornadaGameficare = lazy(() => import('./pages/JornadaGameficare'));
 
 function AppContent() {
   const { setConsent, hasConsented } = useCookieConsent();
@@ -147,7 +147,7 @@ function AppContent() {
           <Route path="/sobre" element={<SobrePage />} />
           <Route path="/projetos" element={<ProjetosPage />} />
           <Route path="/contato" element={<ContatoPage />} />
-          <Route path="/folder" element={<FolderReader />} />
+          <Route path="/jornada-gameficare" element={<JornadaGameficare />} />
         </Routes>
       </Suspense>
 

@@ -1,8 +1,10 @@
-// src/pages/FolderReader.js
+// src/pages/JornadaGameficare.js
 
 import React, { useState, useCallback, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
+import GlobalStyle from '../styles/GlobalStyle';
+import StarryBackground from '../components/organisms/StarryBackground';
 import CTAButton from '../components/atoms/CTAButton';
 
 import page1Url from '../assets/images/folder-page-1.svg';
@@ -74,7 +76,7 @@ const NextContainer = styled.div`
   z-index: 1000;
 `;
 
-export default function FolderReader() {
+export default function JornadaGameficare() {
   const [index, setIndex] = useState(0);
   const [zoomRatio, setZoomRatio] = useState(() => {
     const dpr = window.devicePixelRatio;
@@ -114,14 +116,18 @@ export default function FolderReader() {
   const lastIndex = pages.length - 1;
 
   return (
-    <Container aria-label="Leitor de folder digital">
+    <>
       <Helmet>
         <title>Gameficare Studio</title>
+        <link rel="canonical" href="https://www.gameficare.com.br/jornada-gameficare" />
       </Helmet>
+      <GlobalStyle />
+      <StarryBackground starCount={150} minSize={3} maxSize={30} />
 
-      <ObjectWrapper isFull={isFull} role="region" aria-label={`Página ${index + 1} de ${pages.length}`}>
-        <Img src={currentUrl} alt={`Página ${index + 1} do folder`} isFull={isFull} />
-      </ObjectWrapper>
+      <Container aria-label="Leitor de folder digital">
+        <ObjectWrapper isFull={isFull} role="region" aria-label={`Página ${index + 1} de ${pages.length}`}>
+          <Img src={currentUrl} alt={`Página ${index + 1} do folder`} isFull={isFull} />
+        </ObjectWrapper>
 
       {index > 0 && (
         <PrevContainer zoomRatio={zoomRatio}>
@@ -146,6 +152,7 @@ export default function FolderReader() {
           />
         </NextContainer>
       )}
-    </Container>
+      </Container>
+    </>
   );
 }
