@@ -107,7 +107,7 @@ const PlanetBottom = styled.img`
 const Rocket = styled.img`
   position: absolute;
   top: 10px;
-  right: -40px;
+  right: -100px;
   height: 300px;
   width: auto;
   z-index: -1;

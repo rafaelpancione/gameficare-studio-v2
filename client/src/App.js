@@ -1,10 +1,15 @@
 // src/App.js
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
-import politicaPdf from './assets/documents/politica-de-privacidade.pdf'; // Importe o PDF
+import politicaPdf from './assets/documents/politica-de-privacidade.pdf';
 import { initGA, logPageView } from './utils/analytics';
 import RouteChangeTracker from './utils/route_change';
 import WhatsAppButtonComponent from './components/organisms/WhatsAppButton';
@@ -13,7 +18,7 @@ import {
   useCookieConsent,
 } from './contexts/CookieConsentContext';
 
-// Code Splitting das páginas:
+// Code splitting das páginas
 const HomePage = lazy(() => import('./pages/HomePage'));
 const SobrePage = lazy(() => import('./pages/SobrePage'));
 const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
@@ -23,12 +28,13 @@ const JornadaGameficare = lazy(() => import('./pages/JornadaGameficare'));
 function AppContent() {
   const { setConsent, hasConsented } = useCookieConsent();
   const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const location = useLocation();
+  const isJornada = location.pathname === '/jornada-gameficare';
 
   useEffect(() => {
     initGA();
     logPageView();
 
-    // Verifica se o usuário já deu consentimento anteriormente
     const consentCookie = document.cookie.includes('cookieConsentGameficare');
     if (consentCookie) {
       setShowCookieBanner(false);
@@ -38,26 +44,16 @@ function AppContent() {
   const handleAccept = () => {
     setConsent(true);
     setShowCookieBanner(false);
-
-    // Salva o cookie
     document.cookie = 'cookieConsentGameficare=true; max-age=31536000; path=/';
-
     if (typeof window !== 'undefined') {
-      // Declaração correta da dataLayer
       window.dataLayer = window.dataLayer || [];
-
-      // Declaração explícita da função gtag
       window.gtag = function () {
         window.dataLayer.push(arguments);
       };
-
-      // Carrega o script do GA
       const script = document.createElement('script');
       script.src = 'https://www.googletagmanager.com/gtag/js?id=G-B2VVGXHYR3';
       script.async = true;
       document.head.appendChild(script);
-
-      // Configuração do GA
       window.gtag('js', new Date());
       window.gtag('config', 'G-B2VVGXHYR3', {
         anonymize_ip: true,
@@ -69,17 +65,15 @@ function AppContent() {
   const handleDecline = () => {
     setConsent(false);
     setShowCookieBanner(false);
-
-    // Salva o cookie
     document.cookie = 'cookieConsentGameficare=false; max-age=31536000; path=/';
   };
 
   return (
-    <Router>
+    <>
       <RouteChangeTracker />
 
-      {/* Banner de Cookies - Aparece em todas as páginas */}
-      {showCookieBanner && (
+      {/* Banner de Cookies - aparece em todas as rotas exceto JornadaGameficare */}
+      {!isJornada && showCookieBanner && (
         <div
           style={{
             position: 'fixed',
@@ -151,9 +145,9 @@ function AppContent() {
         </Routes>
       </Suspense>
 
-      {/* Componente WhatsApp flutuante em todas as páginas */}
-      <WhatsAppButtonComponent />
-    </Router>
+      {/* Botão WhatsApp - aparece em todas as rotas exceto JornadaGameficare */}
+      {!isJornada && <WhatsAppButtonComponent />}
+    </>
   );
 }
 
@@ -162,7 +156,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <CookieConsentProvider>
-        <AppContent />
+        <Router>
+          <AppContent />
+        </Router>
       </CookieConsentProvider>
     </ThemeProvider>
   );
