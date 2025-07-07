@@ -47,12 +47,6 @@ const ConsoleSection = styled.section`
   align-items: center;
 `;
 
-const ConsoleImage = styled.img`
-  width: 100%;
-  display: block;
-  z-index: 1;
-`;
-
 const ConsoleContainer = styled.div`
   width: 100%;
   max-width: 1100px; /* limita para que não fique enorme em wides */
@@ -60,6 +54,19 @@ const ConsoleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+// **Novo** wrapper para conter a imagem do console e o jogo:
+const ConsoleWrapper = styled.div`
+  width: 100%;
+  position: relative; /* cria contexto para filhos absolutos */
+`;
+
+// **Novo** componente de imagem com CSS válido:
+const StyledImg = styled.img`
+  width: 100%;
+  display: block;
+  z-index: 1;
 `;
 
 // ============== SEÇÃO 2: NOSSOS SERVIÇOS ==================
@@ -304,11 +311,22 @@ function ProjetosPage() {
       {/* Seção 1: Console em destaque */}
       <ConsoleSection>
         <ConsoleContainer>
-          <ConsoleImage src={gameSvg} alt="Console Gameficare" />
-          <ConsoleGame />
+          <ConsoleWrapper>
+            <StyledImg src={gameSvg} alt="Console Gameficare" />
+            <ConsoleGame
+              style={{
+                position: 'absolute',
+                top: '10%',
+                left: '10%',
+                width: '80%',
+                height: '80%',
+                zIndex: 2,
+              }}
+            />
+          </ConsoleWrapper>
         </ConsoleContainer>
       </ConsoleSection>
-
+      
       {/* Seção 2: NOSSOS SERVIÇOS */}
       <ServicesSection>
         <SectionTitle>
