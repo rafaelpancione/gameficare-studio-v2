@@ -3,12 +3,12 @@
   "name": "Gameficare Studio",
   "icons": [
     {
-      "src": "%PUBLIC_URL%/favicons/android-chrome-192x192.png",
+      "src": "favicons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "%PUBLIC_URL%/favicons/pwa-512x512.png",
+      "src": "favicons/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
