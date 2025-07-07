@@ -3,6 +3,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
+  Navigate,
   Route,
   useLocation,
 } from 'react-router-dom';
@@ -142,6 +143,12 @@ function AppContent() {
           <Route path="/projetos" element={<ProjetosPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/jornada-gameficare" element={<JornadaGameficare />} />
+          <Route
+            path="/politica-de-privacidade"
+            element={
+              <Navigate to="/politica-de-privacidade-sonora.html" replace />
+            }
+          />
         </Routes>
       </Suspense>
 
