@@ -37,3 +37,22 @@ export const GameCanvas = styled.canvas`
   height: 100%;
   touch-action: manipulation;
 `;
+
+export const Hint = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none; /* não intercepta toques */
+  z-index: 10;
+
+  /* só mostra em mobile */
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
