@@ -49,24 +49,40 @@ const ConsoleSection = styled.section`
 
 const ConsoleContainer = styled.div`
   width: 100%;
-  max-width: 1100px; /* limita para que não fique enorme em wides */
-  position: relative; /* referência para o GameWrapper */
+  max-width: 1100px;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-// **Novo** wrapper para conter a imagem do console e o jogo:
 const ConsoleWrapper = styled.div`
   width: 100%;
-  position: relative; /* cria contexto para filhos absolutos */
+  position: relative;
+  @media (max-width: 768px) {
+    background: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
-// **Novo** componente de imagem com CSS válido:
 const StyledImg = styled.img`
   width: 100%;
   display: block;
   z-index: 1;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileGameWrapper = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+  }
 `;
 
 // ============== SEÇÃO 2: NOSSOS SERVIÇOS ==================
@@ -311,6 +327,7 @@ function ProjetosPage() {
       {/* Seção 1: Console em destaque */}
       <ConsoleSection>
         <ConsoleContainer>
+          {/* Desktop/Tablet: Console com visor */}
           <ConsoleWrapper>
             <StyledImg src={gameSvg} alt="Console Gameficare" />
             <ConsoleGame
@@ -321,12 +338,18 @@ function ProjetosPage() {
                 width: '80%',
                 height: '80%',
                 zIndex: 2,
+                display: 'none',
               }}
+              className="desktop-console-game"
             />
           </ConsoleWrapper>
+          {/* Mobile: Apenas o jogo, sem console */}
+          <MobileGameWrapper>
+            <ConsoleGame fullWidth />
+          </MobileGameWrapper>
         </ConsoleContainer>
       </ConsoleSection>
-      
+
       {/* Seção 2: NOSSOS SERVIÇOS */}
       <ServicesSection>
         <SectionTitle>

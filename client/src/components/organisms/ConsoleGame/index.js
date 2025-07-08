@@ -4,11 +4,11 @@ import { GameWrapper, GameCanvas } from './styles';
 import brickImg from '../../../assets/images/game/brick.png';
 import ballImg from '../../../assets/images/game/ball.png';
 import paddleImg from '../../../assets/images/game/paddle.png';
-import sputImg from '../../../assets/images/game/sput.svg';
-import heartFill from '../../../assets/images/game/heart_fill.svg';
-import heartOver from '../../../assets/images/game/heart_over.svg';
+import sputImg from '../../../assets/images/game/sput.svg?url';
+import heartFill from '../../../assets/images/game/heart_fill.svg?url';
+import heartOver from '../../../assets/images/game/heart_over.svg?url';
 
-function ConsoleGame() {
+function ConsoleGame({ fullWidth = false, ...props }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -537,7 +537,7 @@ function ConsoleGame() {
   }, []);
 
   return (
-    <GameWrapper>
+    <GameWrapper fullWidth={fullWidth}>
       <GameCanvas ref={canvasRef} />
     </GameWrapper>
   );

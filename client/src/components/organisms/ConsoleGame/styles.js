@@ -1,35 +1,39 @@
 import styled from 'styled-components';
 
 export const GameWrapper = styled.div`
-  position: absolute;
-  /* Posiciona o canvas dentro do retângulo interno do SVG */
-  top: 16.48%;
-  left: 30.03%;
-  width: 39.91%;
-  /* height: 49.2%; */
-  aspect-ratio: 575.803 / 428.822;
-  overflow: hidden; /* recorta tudo que sai do visor */
-  background-color: #071f56; /* garante fundo exato por baixo do canvas */
-  pointer-events: auto; /* habilita mouse/touch dentro do console */
-  z-index: 0; /* fica abaixo da arte do console */
+  ${(p) =>
+    p.fullWidth
+      ? `
+      position: static;
+      width: 100vw;
+      max-width: 100vw;
+      aspect-ratio: 4 / 3;   /* 75 % da largura gera altura */
+      background:#071f56;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+  `
+      : `
+      position:absolute;
+      top:16.48%; left:30.03%;
+      width:39.91%; height:49.2%;
+      aspect-ratio:575.803 / 428.822;
+      background:#071f56;
+  `}
 
-  @media (max-width: 768px) {
-    top: 16.48%;
-    left: 30.03%;
-    width: 39.91%;
-    aspect-ratio: 575.803 / 428.822;
+  /* mobile overwrite SÓ quando NÃO for fullWidth */
+  @media (max-width:768px) {
+    ${(p) =>
+      !p.fullWidth &&
+      `
+        top:16.48%; left:30.03%;
+        width:39.91%; aspect-ratio:575.803 / 428.822;
+    `}
   }
 `;
 
 export const GameCanvas = styled.canvas`
   width: 100%;
   height: 100%;
-  display: block;
-  touch-action: manipulation; /* Melhora a responsividade do touch */
-  -webkit-touch-callout: none; /* Remove o menu de contexto no iOS */
-  -webkit-user-select: none; /* Remove seleção de texto no iOS */
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  touch-action: manipulation;
 `;
