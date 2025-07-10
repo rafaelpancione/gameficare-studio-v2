@@ -33,7 +33,7 @@ function ConsoleGame({ fullWidth = false }) {
     const paddleSpeed = 6;
 
     const ballSize = 10;
-    const baseBallSpeed = 2;
+    const baseBallSpeed = 1.5;
 
     canvas.width = GAME_WIDTH;
     canvas.height = GAME_HEIGHT;
