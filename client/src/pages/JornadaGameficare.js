@@ -20,6 +20,7 @@ import planet1Svg from '../assets/images/planet1.svg';
 import planet2Svg from '../assets/images/planet2.svg';
 import rocketSvg from '../assets/images/foguete.svg';
 import trofeuSvg from '../assets/images/trofeu.svg';
+import logoSvg from '../assets/images/logo.svg';
 
 // Remove os quadrados do GridOverlay apenas nesta página
 const HideGridOverlay = createGlobalStyle`
@@ -114,6 +115,13 @@ const Rocket = styled.img`
   animation: ${planetSwingAnimation} 6s infinite ease-in-out;
 `;
 
+const Logo = styled.img`
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  width: 70px;
+`;
+
 const Trophy = styled.img`
   position: absolute;
   bottom: 100px;
@@ -148,6 +156,15 @@ export default function JornadaGameficare() {
           <StarryBackground starCount={150} minSize={3} maxSize={30} />
         </ThemeProvider>
         <ContentWrapper>
+          <a
+    href="https://www.gameficare.com.br"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{ position: 'absolute', top: 20, left: 0, zIndex: 2 }}
+    aria-label="Ir para o site Gameficare"
+  >
+    <Logo src={logoSvg} alt="Logo Gameficare" loading="lazy" />
+  </a>
           <Moon src={moonSvg} alt="Lua decorativa" loading="lazy" />
           <PlanetTop src={planet1Svg} alt="Planeta decorativo" loading="lazy" />
           <PlanetBottom
