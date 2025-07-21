@@ -143,19 +143,8 @@ function AppContent() {
           <Route path="/projetos" element={<ProjetosPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/jornada-gameficare" element={<JornadaGameficare />} />
-          <Route
-            path="/politica-de-privacidade"
-            element={
-              <Navigate to="/politica-de-privacidade-sonora.html" replace />
-            }
-          />
-        </Routes>
-              <Route
-            path="/politica-de-privacidade-gameficare"
-            element={
-              <Navigate to="/politica-de-privacidade.html" replace />
-            }
-          />
+          <Route path="/politica-de-privacidade" element={<Navigate to="/politica-de-privacidade-sonora.html" replace />}/>
+          <Route path="/politica-de-privacidade-gameficare" element={<Navigate to="/politica-de-privacidade.html" replace />}/>
         </Routes>
       </Suspense>
 
