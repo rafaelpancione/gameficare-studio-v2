@@ -150,6 +150,13 @@ function AppContent() {
             }
           />
         </Routes>
+              <Route
+            path="/politica-de-privacidade-gameficare"
+            element={
+              <Navigate to="/politica-de-privacidade.html" replace />
+            }
+          />
+        </Routes>
       </Suspense>
 
       {/* Botão WhatsApp - aparece em todas as rotas exceto JornadaGameficare */}
