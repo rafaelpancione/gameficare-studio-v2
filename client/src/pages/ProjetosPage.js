@@ -419,7 +419,7 @@ function ProjetosPage() {
           <ProjectCard
             description="Sonora é um jogo para dispositivo móveis para auxiliar na triagem auditiva, uma maneira simples, prática e lúdica que tem o potencial de ajudar a melhorar o desenvolvimento social de milhares de crianças e jovens em todo país."
             image={img1Png}
-            link=""
+            link="https://sonora.gameficare.com.br/"
             title="SONORA"
           />
           <ProjectCard
