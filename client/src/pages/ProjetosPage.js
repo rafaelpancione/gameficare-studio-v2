@@ -18,7 +18,7 @@ import sputSvg from '../assets/images/sput.svg';
 import img1Png from '../assets/images/img1.webp';
 import img2Png from '../assets/images/img2.webp';
 import img3Png from '../assets/images/img3.webp';
-import sputAdventureEduPng from '../assets/images/sput-adventure-edu.png';
+import sputAdventureEduPng from '../assets/images/sput-adventure-edu.webp';
 import logoPlaySvg from '../assets/images/play.svg';
 import logoSinapseSvg from '../assets/images/sinapse.svg';
 import logoPlaymoveSvg from '../assets/images/playmove.svg';
