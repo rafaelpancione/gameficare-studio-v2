@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { GameWrapper, GameCanvas } from './styles';
 
 import brickImg from '../../../assets/images/game/brick.png';
@@ -8,9 +8,17 @@ import sputImg from '../../../assets/images/game/sput.svg?url';
 import heartFill from '../../../assets/images/game/heart_fill.svg?url';
 import heartOver from '../../../assets/images/game/heart_over.svg?url';
 import logoGame from '../../../assets/images/logo-game.png';
+import ShareButton from '../ShareButton';
 
 function ConsoleGame({ fullWidth = false }) {
+  const shareRef = useRef(false);
   const canvasRef = useRef(null);
+  const [shareInfo, setShareInfo] = useState({
+    score: 0,
+    timeBonus: 0,
+    lifeBonus: 0,
+    show: false,
+  });
 
   // helper para detectar mobile
   const isMobile = () =>
@@ -317,6 +325,8 @@ function ConsoleGame({ fullWidth = false }) {
             lives--;
             if (lives <= 0) {
               state = 'gameover';
+              setShareInfo({ score, timeBonus, lifeBonus, show: true });
+              shareRef.current = true;
             } else {
               balls = [createBallAtPaddle()];
             }
@@ -335,12 +345,16 @@ function ConsoleGame({ fullWidth = false }) {
         lifeBonus = lives * 500;
         score += timeBonus + lifeBonus;
         state = 'win';
+        setShareInfo({ score, timeBonus, lifeBonus, show: true });
+        shareRef.current = true;
       }
 
       animationId = requestAnimationFrame(draw);
     }
 
     function restart() {
+      shareRef.current = false;
+      setShareInfo({ score: 0, timeBonus: 0, lifeBonus: 0, show: false });
       lives = 3;
       state = 'playing';
       paddleX = (GAME_WIDTH - paddleWidth) / 2;
@@ -354,6 +368,7 @@ function ConsoleGame({ fullWidth = false }) {
     }
 
     function keyDownHandler(e) {
+      if (shareRef.current) return;
       if (state !== 'playing') {
         if (['ArrowLeft', 'ArrowRight'].includes(e.key)) restart();
         return;
@@ -378,11 +393,11 @@ function ConsoleGame({ fullWidth = false }) {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
-      if (state !== 'playing') handleButtonClick(mx, my);
+      if (state !== 'playing' && !shareRef.current) handleButtonClick(mx, my);
     }
 
     function touchHandler(e) {
-      if (state !== 'playing') {
+      if (state !== 'playing' && !shareRef.current) {
         e.preventDefault();
         const rect = canvas.getBoundingClientRect();
         const touch = e.touches[0] || e.changedTouches[0];
@@ -424,6 +439,15 @@ function ConsoleGame({ fullWidth = false }) {
   return (
     <GameWrapper fullWidth={fullWidth}>
       <GameCanvas ref={canvasRef} />
+      {shareInfo.show && (
+        <ShareButton
+          canvasRef={canvasRef}
+          score={shareInfo.score}
+          timeBonus={shareInfo.timeBonus}
+          lifeBonus={shareInfo.lifeBonus}
+          gameUrl={window.location.href}
+        />
+      )}
     </GameWrapper>
   );
 }

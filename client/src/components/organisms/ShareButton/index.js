@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as shareUtils from '../../../utils/shareUtils';
-import { Button, FallbackMessage } from './styles';
+import { Button, FallbackMessage, Overlay } from './styles';
 import logoShare from '../../../assets/images/logo-share.png';
 
 export default function ShareButton({
@@ -44,9 +44,9 @@ export default function ShareButton({
   }
 
   return (
-    <>
+    <Overlay>
       <Button onClick={handleShare} disabled={loading}>
-        {loading ? 'Carregando…' : 'Compartilhar resultado'}
+        {loading ? 'Carregando…' : '📤 Compartilhar'}
       </Button>
       {showFallbackMsg && (
         <FallbackMessage>
@@ -55,7 +55,7 @@ export default function ShareButton({
           usar <strong>#BreakoutChallenge</strong>.
         </FallbackMessage>
       )}
-    </>
+    </Overlay>
   );
 }
 

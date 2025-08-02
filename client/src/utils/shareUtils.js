@@ -74,6 +74,12 @@ export async function doWebShare({ blob, text, url }) {
  * Fallback: força download da imagem e abre popups de share em redes sociais.
  * @param {{ blobUrl: string, url: string, text: string }} params
  */
+export async function captureScore({ canvas, logoSrc, scoreText }) {
+  const baseBlob = await captureCanvas(canvas);
+  const composed = await composeShareImage({ baseBlob, logoSrc, scoreText });
+  return composed;
+}
+
 export function openSocialFallback({ blobUrl, url, text }) {
   // 1) Download direto da imagem
   const a = document.createElement('a');

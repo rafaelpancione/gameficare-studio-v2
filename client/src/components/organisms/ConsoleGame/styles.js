@@ -4,7 +4,7 @@ export const GameWrapper = styled.div`
   ${(p) =>
     p.fullWidth
       ? `
-      position: static;
+      position: relative;
       width: 100vw;
       max-width: 100vw;
       aspect-ratio: 4 / 3;   /* 75 % da largura gera altura */
