@@ -114,7 +114,7 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
           <div
             style={{
               position: 'absolute',
-              bottom: 48,
+              bottom: 78,
               left: 0,
               width: '100%',
               display: 'flex',
@@ -145,7 +145,7 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
           <div
             style={{
               position: 'absolute',
-              bottom: 16,
+              bottom: 46,
               left: 0,
               width: '100%',
               textAlign: 'center',
