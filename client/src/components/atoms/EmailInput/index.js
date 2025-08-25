@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   InputContainer,
@@ -9,115 +9,88 @@ import {
 } from './styles';
 import { ReactComponent as ArrowSVG } from '../../../assets/icons/arrow-right.svg';
 
-// Componente para esconder visualmente elementos, mantendo a acessibilidade
-const VisuallyHidden = ({ children }) => (
-  <span
-    style={{
-      position: 'absolute',
-      width: '1px',
-      height: '1px',
-      margin: '-1px',
-      border: 0,
-      padding: 0,
-      overflow: 'hidden',
-      clip: 'rect(0, 0, 0, 0)',
-    }}
-  >
-    {children}
-  </span>
-);
+const ENDPOINT = process.env.REACT_APP_NEWSLETTER_ENDPOINT;
+const SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
 
-VisuallyHidden.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+// A11y helper
+const VisuallyHidden = ({ children }) => (
+  <span style={{
+    position:'absolute', width:'1px', height:'1px', margin:'-1px',
+    border:0, padding:0, clip:'rect(0 0 0 0)', overflow:'hidden'
+  }}>{children}</span>
+);
+VisuallyHidden.propTypes = { children: PropTypes.node };
 
 const EmailInput = ({ onSubmit = () => {} }) => {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [status, setStatus] = useState(''); // Novo estado para feedback
+  const [error, setError]   = useState('');
+  const [status, setStatus] = useState(''); // mensagens de feedback
+
+  useEffect(() => {
+    if (!SITE_KEY) console.error('REACT_APP_RECAPTCHA_SITE_KEY ausente');
+    if (!ENDPOINT) console.error('REACT_APP_NEWSLETTER_ENDPOINT ausente');
+  }, []);
 
   const isValidEmail = useCallback(
-    (emailValue) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue),
+    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim()),
     []
   );
 
-  const handleSubmit = useCallback(
-    async (event) => {
-      event.preventDefault();
-      if (!isValidEmail(email)) {
-        setError('Por favor, insira um email válido.');
-        return;
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!isValidEmail(email)) {
+      setError('Por favor, insira um e-mail válido.');
+      return;
+    }
+    setStatus('Enviando…');
+
+    try {
+      let recaptchaToken = '';
+      if (window.grecaptcha && SITE_KEY) {
+        recaptchaToken = await window.grecaptcha.execute(SITE_KEY, { action: 'newsletter' });
       }
 
-      try {
-        await fetch(
-          'https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' },
-            body: JSON.stringify({ email }),
-            mode: 'no-cors', // remover em produção
-          }
-        );
+      await fetch(ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script não expõe CORS; o POST ainda chega
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'site-newsletter', recaptchaToken }),
+      });
 
-        setStatus('Inscrição realizada!');
-        setEmail('');
-        // Aqui você pode chamar onSubmit, se desejar acionar algo externo
-        // onSubmit(email);
-      } catch (error) {
-        setError('Erro ao cadastrar. Tente novamente.');
-      }
-    },
-    [email, isValidEmail]
-  );
-
-  const handleChange = useCallback(
-    (e) => {
-      setEmail(e.target.value);
-      if (error) {
-        setError('');
-      }
-    },
-    [error]
-  );
+      // Double opt-in: instruir a conferir o e-mail
+      setStatus('Quase lá! Confira sua caixa de entrada para confirmar a inscrição 💌');
+      setEmail('');
+      onSubmit({ email }); // callback opcional
+    } catch (err) {
+      console.error(err);
+      setError('Não foi possível enviar agora. Tente novamente em instantes.');
+      setStatus('');
+    }
+  }, [email, onSubmit, isValidEmail]);
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+      <VisuallyHidden><label htmlFor="newsletter-email">Seu e-mail</label></VisuallyHidden>
+
       <InputContainer>
-        <label htmlFor="email-input">
-          <VisuallyHidden>Email</VisuallyHidden>
-        </label>
         <InputField
-          id="email-input"
-          name="email"
+          id="newsletter-email"
           type="email"
-          placeholder="Insira seu e-mail."
-          autoComplete="email"
+          placeholder="Seu e-mail"
           value={email}
-          onChange={handleChange}
-          aria-label="Insira seu e-mail"
+          onChange={(e) => setEmail(e.target.value)}
           aria-invalid={!!error}
-          aria-describedby={error ? 'email-error' : undefined}
+          required
         />
-        <SubmitButton type="submit" aria-label="Enviar email">
-          <ArrowIcon>
-            <ArrowSVG />
-          </ArrowIcon>
+        <SubmitButton type="submit" aria-label="Inscrever na newsletter">
+          <ArrowIcon as={ArrowSVG} />
         </SubmitButton>
       </InputContainer>
-      {error && (
-        <ErrorMessage id="email-error" role="alert">
-          {error}
-        </ErrorMessage>
-      )}
-      {status && !error && (
-        <div
-          style={{
-            color: 'green',
-            marginTop: '5px',
-            fontFamily: 'Roboto Mono, monospace',
-          }}
-        >
+
+      {error && <ErrorMessage role="alert">{error}</ErrorMessage>}
+      {status && (
+        <div style={{ marginTop: 8, fontFamily: 'Roboto Mono, monospace', fontSize: 12 }}>
           {status}
         </div>
       )}
@@ -125,8 +98,5 @@ const EmailInput = ({ onSubmit = () => {} }) => {
   );
 };
 
-EmailInput.propTypes = {
-  onSubmit: PropTypes.func,
-};
-
+EmailInput.propTypes = { onSubmit: PropTypes.func };
 export default EmailInput;
