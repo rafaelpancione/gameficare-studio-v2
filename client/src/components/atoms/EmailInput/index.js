@@ -49,6 +49,7 @@ const EmailInput = ({ onSubmit = () => {} }) => {
       let recaptchaToken = '';
       if (window.grecaptcha && SITE_KEY) {
         recaptchaToken = await window.grecaptcha.execute(SITE_KEY, { action: 'newsletter' });
+        console.log('Token reCAPTCHA gerado:', recaptchaToken); // 👈 log temporário
       }
 
       await fetch(ENDPOINT, {
