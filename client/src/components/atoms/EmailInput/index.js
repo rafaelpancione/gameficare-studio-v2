@@ -43,69 +43,61 @@ const EmailInput = ({ onSubmit = () => {} }) => {
   );
 
   const handleSubmit = useCallback(
-    async (event) => {
-      event.preventDefault();
-      
-      // Reset estados
-      setError('');
-      setStatus('');
-      
-      if (!isValidEmail(email)) {
-        setError('Por favor, insira um email válido.');
-        return;
+  async (event) => {
+    event.preventDefault();
+    
+    // Reset estados
+    setError('');
+    setStatus('');
+    
+    if (!isValidEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // URL da API do Vercel - note que usamos caminho relativo
+      const response = await fetch(
+        '/api/newsletter',
+        {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Erro na resposta do servidor');
       }
 
-      setIsLoading(true);
+      const data = await response.json();
 
-      try {
-        const response = await fetch(
-          'https://script.google.com/macros/s/AKfycbzAaQsEku_kpSjq9-Vy-2V2ihAl9co7nqH6dVqjjX3vfEdzjbrRXcSntHLsRH5VdEQNXA/exec',
-          {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-          }
-        );
-
-        // Verifica se a resposta é OK
-        if (!response.ok) {
-          throw new Error('Erro na resposta do servidor');
-        }
-
-        // Converte a resposta para texto e depois para JSON
-        const text = await response.text();
-        let data;
-        
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          throw new Error('Resposta inválida do servidor');
-        }
-
-        if (data.success) {
-          if (data.emailSent) {
-            setStatus('Inscrição realizada! Em breve você receberá um e-mail de boas-vindas.');
-          } else {
-            setStatus('Inscrição realizada! O e-mail de boas-vindas pode demorar um pouco.');
-          }
-          setEmail('');
-          onSubmit(email);
-        } else if (data.error) {
-          setError(data.error || 'Erro ao processar sua inscrição.');
+      if (data.success) {
+        if (data.emailSent) {
+          setStatus('Inscrição realizada! Em breve você receberá um e-mail de boas-vindas.');
         } else {
-          setError('Erro desconhecido ao processar sua inscrição.');
+          setStatus('Inscrição realizada! O e-mail de boas-vindas pode demorar um pouco.');
         }
-      } catch (error) {
-        console.error('Erro ao cadastrar:', error);
-        setError('Erro ao cadastrar. Tente novamente em alguns instantes.');
-      } finally {
-        setIsLoading(false);
+        setEmail('');
+        onSubmit(email);
+      } else if (data.error) {
+        setError(data.error || 'Erro ao processar sua inscrição.');
+      } else {
+        setError('Erro desconhecido ao processar sua inscrição.');
       }
-    },
-    [email, isValidEmail, onSubmit]
-  );
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
+      setError('Erro ao cadastrar. Tente novamente em alguns instantes.');
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  [email, isValidEmail, onSubmit]
+);
 
   const handleChange = useCallback(
     (e) => {
