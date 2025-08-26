@@ -19,18 +19,47 @@ export default async function handler(req, res) {
 
   try {
     console.log('Recebida requisição para /api/newsletter');
-    const { email } = req.body;
-    console.log('Email recebido:', email);
+    
+    // Verificar se o content-type é application/json
+    const contentType = req.headers['content-type'];
+    if (!contentType || !contentType.includes('application/json')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Content-Type deve ser application/json'
+      });
+    }
+
+    // Ler e parsear o body manualmente para melhor tratamento de erro
+    let body = '';
+    for await (const chunk of req) {
+      body += chunk.toString();
+    }
+
+    console.log('Body recebido:', body);
+
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(body);
+    } catch (parseError) {
+      console.error('Erro ao fazer parse do JSON:', parseError.message);
+      return res.status(400).json({
+        success: false,
+        error: 'JSON inválido no corpo da requisição'
+      });
+    }
+
+    const { email } = parsedBody;
 
     // Validação do e-mail
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      console.log('Email inválido:', email);
+      console.log('Email inválido recebido:', email);
       return res.status(400).json({ 
         success: false,
         error: 'E-mail inválido' 
       });
     }
 
+    console.log('Email válido recebido:', email);
     console.log('Fazendo requisição para Google Apps Script...');
     
     // Fazer a requisição para o Google Apps Script
@@ -42,39 +71,36 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
-        // Adicionar timeout para evitar espera infinita
-        signal: AbortSignal.timeout(10000)
       }
     );
 
     console.log('Resposta recebida do Google Apps Script. Status:', response.status);
 
-    // Verificar se a resposta do Google Apps Script é OK
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Erro na resposta do Google Apps Script:', response.status, errorText);
-      throw new Error(`Erro no Google Apps Script: ${response.status} ${response.statusText}`);
+      throw new Error(`Erro no Google Apps Script: ${response.status}`);
     }
 
     const responseText = await response.text();
-    console.log('Conteúdo da resposta:', responseText);
+    console.log('Conteúdo da resposta do GAS:', responseText);
 
     let data;
     try {
       data = JSON.parse(responseText);
     } catch (e) {
-      console.error('Erro ao fazer parse da resposta JSON:', e);
-      console.error('Resposta original:', responseText);
+      console.error('Erro ao fazer parse da resposta JSON do GAS:', e);
+      console.error('Resposta original do GAS:', responseText);
       throw new Error('Resposta inválida do Google Apps Script');
     }
     
-    console.log('Dados parseados:', data);
+    console.log('Dados parseados do GAS:', data);
     
     // Retornar a resposta para o frontend
     res.status(200).json({
       success: true,
       emailSent: data.emailSent || false,
-      message: data.message || 'E-mail processado com sucesso'
+      message: 'E-mail processado com sucesso'
     });
     
   } catch (error) {
@@ -85,7 +111,7 @@ export default async function handler(req, res) {
     res.status(500).json({ 
       success: false,
       error: 'Erro interno do servidor',
-      details: process.env.NODE_ENV === 'development' ? error.message : 'Entre em contato com o suporte'
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 }
