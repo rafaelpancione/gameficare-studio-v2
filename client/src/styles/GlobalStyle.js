@@ -27,7 +27,14 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
   }
-
+ @keyframes spin {
+    0% { 
+      transform: rotate(0deg); 
+    }
+    100% { 
+      transform: rotate(360deg); 
+    }
+  }
   /* Corpo principal: usa Roboto como fonte */
   body {
     font-family: 'Roboto', sans-serif;

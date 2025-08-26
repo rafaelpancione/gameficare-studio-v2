@@ -34,8 +34,7 @@ VisuallyHidden.propTypes = {
 const EmailInput = ({ onSubmit = () => {} }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [status, setStatus] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState(''); // Novo estado para feedback
 
   const isValidEmail = useCallback(
     (emailValue) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue),
@@ -45,75 +44,41 @@ const EmailInput = ({ onSubmit = () => {} }) => {
   const handleSubmit = useCallback(
     async (event) => {
       event.preventDefault();
-      
-      // Reset estados
-      setError('');
-      setStatus('');
-      
       if (!isValidEmail(email)) {
         setError('Por favor, insira um email válido.');
         return;
       }
 
-      setIsLoading(true);
-
       try {
-        const response = await fetch(
-          'https://script.google.com/macros/s/AKfycbyCVRGXQ3Q4buu3y7FdUZdU5Jfzb23PenY8tBU24bgId3p7DboOoykpgB7oyOCkir15zA/exec',
+        await fetch(
+          'https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec',
           {
             method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' },
             body: JSON.stringify({ email }),
+            mode: 'no-cors', // remover em produção
           }
         );
 
-        // Verifica se a resposta é OK
-        if (!response.ok) {
-          throw new Error('Erro na resposta do servidor');
-        }
-
-        // Converte a resposta para texto e depois para JSON
-        const text = await response.text();
-        let data;
-        
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          throw new Error('Resposta inválida do servidor');
-        }
-
-        if (data.success) {
-          if (data.emailSent) {
-            setStatus('Inscrição realizada! Em breve você receberá um e-mail de boas-vindas.');
-          } else {
-            setStatus('Inscrição realizada! O e-mail de boas-vindas pode demorar um pouco.');
-          }
-          setEmail('');
-          onSubmit(email);
-        } else if (data.error) {
-          setError(data.error || 'Erro ao processar sua inscrição.');
-        } else {
-          setError('Erro desconhecido ao processar sua inscrição.');
-        }
+        setStatus('Inscrição realizada!');
+        setEmail('');
+        // Aqui você pode chamar onSubmit, se desejar acionar algo externo
+        // onSubmit(email);
       } catch (error) {
-        console.error('Erro ao cadastrar:', error);
-        setError('Erro ao cadastrar. Tente novamente em alguns instantes.');
-      } finally {
-        setIsLoading(false);
+        setError('Erro ao cadastrar. Tente novamente.');
       }
     },
-    [email, isValidEmail, onSubmit]
+    [email, isValidEmail]
   );
 
   const handleChange = useCallback(
     (e) => {
       setEmail(e.target.value);
-      if (error) setError('');
-      if (status) setStatus('');
+      if (error) {
+        setError('');
+      }
     },
-    [error, status]
+    [error]
   );
 
   return (
@@ -133,43 +98,24 @@ const EmailInput = ({ onSubmit = () => {} }) => {
           aria-label="Insira seu e-mail"
           aria-invalid={!!error}
           aria-describedby={error ? 'email-error' : undefined}
-          disabled={isLoading}
         />
-        <SubmitButton 
-          type="submit" 
-          aria-label="Enviar email"
-          disabled={isLoading}
-        >
+        <SubmitButton type="submit" aria-label="Enviar email">
           <ArrowIcon>
-            {isLoading ? (
-              <div style={{
-                width: '20px', 
-                height: '20px', 
-                border: '2px solid #f3f3f3', 
-                borderTop: '2px solid #3498db', 
-                borderRadius: '50%', 
-                animation: 'spin 1s linear infinite'
-              }} />
-            ) : (
-              <ArrowSVG />
-            )}
+            <ArrowSVG />
           </ArrowIcon>
         </SubmitButton>
       </InputContainer>
-      
       {error && (
         <ErrorMessage id="email-error" role="alert">
           {error}
         </ErrorMessage>
       )}
-      
       {status && !error && (
         <div
           style={{
             color: 'green',
             marginTop: '5px',
             fontFamily: 'Roboto Mono, monospace',
-            fontSize: '14px',
           }}
         >
           {status}
