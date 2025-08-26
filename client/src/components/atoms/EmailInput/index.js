@@ -36,39 +36,43 @@ const EmailInput = ({ onSubmit = () => {} }) => {
     []
   );
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setError('');
+ const handleSubmit = useCallback(
+  async (event) => {
+    event.preventDefault();
     if (!isValidEmail(email)) {
-      setError('Por favor, insira um e-mail válido.');
+      setError('Por favor, insira um email válido.');
       return;
     }
-    setStatus('Enviando…');
 
     try {
+      // Gera token do reCAPTCHA v3 (se disponível)
       let recaptchaToken = '';
       if (window.grecaptcha && SITE_KEY) {
+        await new Promise((res) => window.grecaptcha.ready(res));
         recaptchaToken = await window.grecaptcha.execute(SITE_KEY, { action: 'newsletter' });
-        //console.log('Token reCAPTCHA gerado:', recaptchaToken);  👈 log temporário
       }
 
       await fetch(ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors', // Apps Script não expõe CORS; o POST ainda chega
+        mode: 'no-cors',                // Apps Script não libera CORS
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'site-newsletter', recaptchaToken }),
+        body: JSON.stringify({
+          email,
+          source: 'site-newsletter',
+          recaptchaToken,              // <- AGORA enviando o token
+        }),
       });
 
-      // Double opt-in: instruir a conferir o e-mail
       setStatus('Quase lá! Confira sua caixa de entrada para confirmar a inscrição 💌');
       setEmail('');
-      onSubmit({ email }); // callback opcional
-    } catch (err) {
-      console.error(err);
-      setError('Não foi possível enviar agora. Tente novamente em instantes.');
-      setStatus('');
+    } catch (error) {
+      console.error(error);
+      setError('Erro ao cadastrar. Tente novamente.');
     }
-  }, [email, onSubmit, isValidEmail]);
+  },
+  [email, isValidEmail]
+);
+
 
   return (
     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
