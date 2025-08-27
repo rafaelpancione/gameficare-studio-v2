@@ -159,9 +159,14 @@ const EmailInput = ({ onSubmit = () => {} }) => {
         <div
           style={{
             color: 'green',
+            background: '#fff',
+            border: '1px solid #000',
             marginTop: '5px',
             fontFamily: 'Roboto Mono, monospace',
             fontSize: '14px',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            display: 'inline-block',
           }}
         >
           {status}
