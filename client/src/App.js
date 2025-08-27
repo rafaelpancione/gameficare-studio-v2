@@ -25,6 +25,7 @@ const SobrePage = lazy(() => import('./pages/SobrePage'));
 const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
 const ContatoPage = lazy(() => import('./pages/ContatoPage'));
 const JornadaGameficare = lazy(() => import('./pages/JornadaGameficare'));
+const UnsubscribePage = lazy(() => import('./pages/UsubscribePage'));
 
 function AppContent() {
   const { setConsent, hasConsented } = useCookieConsent();
@@ -143,6 +144,7 @@ function AppContent() {
           <Route path="/projetos" element={<ProjetosPage />} />
           <Route path="/contato" element={<ContatoPage />} />
           <Route path="/jornada-gameficare" element={<JornadaGameficare />} />
+          <Route path="/unsubscribe" element={<UnsubscribePage />} />
           <Route path="/politica-de-privacidade" element={<Navigate to="/politica-de-privacidade-sonora.html" replace />}/>
           <Route path="/politica-de-privacidade-gameficare" element={<Navigate to="/politica-de-privacidade.html" replace />}/>
         </Routes>
