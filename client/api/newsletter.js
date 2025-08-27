@@ -20,16 +20,7 @@ export default async function handler(req, res) {
   try {
     console.log('Recebida requisição para /api/newsletter');
     
-    // Verificar se o content-type é application/json
-    const contentType = req.headers['content-type'];
-    if (!contentType || !contentType.includes('application/json')) {
-      return res.status(400).json({
-        success: false,
-        error: 'Content-Type deve ser application/json'
-      });
-    }
-
-    // Ler e parsear o body manualmente para melhor tratamento de erro
+    // Ler o body manualmente
     let body = '';
     for await (const chunk of req) {
       body += chunk.toString();
@@ -37,9 +28,13 @@ export default async function handler(req, res) {
 
     console.log('Body recebido:', body);
 
+    // Tentar parsear como JSON
     let parsedBody;
+    let email;
+
     try {
       parsedBody = JSON.parse(body);
+      email = parsedBody.email;
     } catch (parseError) {
       console.error('Erro ao fazer parse do JSON:', parseError.message);
       return res.status(400).json({
@@ -47,8 +42,6 @@ export default async function handler(req, res) {
         error: 'JSON inválido no corpo da requisição'
       });
     }
-
-    const { email } = parsedBody;
 
     // Validação do e-mail
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -76,22 +69,23 @@ export default async function handler(req, res) {
 
     console.log('Resposta recebida do Google Apps Script. Status:', response.status);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Erro na resposta do Google Apps Script:', response.status, errorText);
-      throw new Error(`Erro no Google Apps Script: ${response.status}`);
-    }
-
+    // Verificar se a resposta é HTML (erro) ou JSON (sucesso)
     const responseText = await response.text();
-    console.log('Conteúdo da resposta do GAS:', responseText);
+    console.log('Conteúdo da resposta do GAS:', responseText.substring(0, 200) + '...'); // Log parcial
 
     let data;
+    if (response.status !== 200 || responseText.includes('<!DOCTYPE html>')) {
+      // O GAS retornou um erro HTML
+      console.error('Google Apps Script retornou erro HTML. Status:', response.status);
+      throw new Error(`Erro no Google Apps Script: Status ${response.status}. Verifique a URL e as permissões.`);
+    }
+
     try {
       data = JSON.parse(responseText);
     } catch (e) {
       console.error('Erro ao fazer parse da resposta JSON do GAS:', e);
-      console.error('Resposta original do GAS:', responseText);
-      throw new Error('Resposta inválida do Google Apps Script');
+      console.error('Resposta original do GAS:', responseText.substring(0, 500));
+      throw new Error('Resposta inválida do Google Apps Script - não é JSON válido');
     }
     
     console.log('Dados parseados do GAS:', data);
@@ -105,13 +99,11 @@ export default async function handler(req, res) {
     
   } catch (error) {
     console.error('Erro detalhado na API:', error.message);
-    console.error('Stack trace:', error.stack);
     
     // Retornar erro específico para o frontend
     res.status(500).json({ 
       success: false,
-      error: 'Erro interno do servidor',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: error.message || 'Erro interno do servidor'
     });
   }
 }
