@@ -1,6 +1,6 @@
 // api/proxy.js
 export default async function handler(req, res) {
-  const targetUrl = 'https://script.google.com/macros/s/AKfycby4I9UUcemqBQz-_96NoDhszKR-xcaS2q3NlPxChMn4lrbTwW-D8UXMSYgS-zfYFnlKgw/exec';
+  const targetUrl = 'https://script.google.com/macros/s/AKfycbzR6DIdJAkVXZJBwq4CAzWVXaaHR3INyb5K23TRIO65O6TRVr5ZFskKag8UgyLxGiNc/exec';
 
   // Configurar cabeçalhos CORS
   res.setHeader('Access-Control-Allow-Origin', 'https://www.gameficare.com.br');

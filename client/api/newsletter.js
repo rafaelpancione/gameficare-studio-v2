@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     
     // Fazer a requisição para o Google Apps Script
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycby4I9UUcemqBQz-_96NoDhszKR-xcaS2q3NlPxChMn4lrbTwW-D8UXMSYgS-zfYFnlKgw/exec',
+      'https://script.google.com/macros/s/AKfycbzR6DIdJAkVXZJBwq4CAzWVXaaHR3INyb5K23TRIO65O6TRVr5ZFskKag8UgyLxGiNc/exec',
       {
         method: 'POST',
         headers: {
