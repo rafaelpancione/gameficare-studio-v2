@@ -34,7 +34,8 @@ VisuallyHidden.propTypes = {
 const EmailInput = ({ onSubmit = () => {} }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [status, setStatus] = useState(''); // Novo estado para feedback
+  const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const isValidEmail = useCallback(
     (emailValue) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue),
@@ -42,43 +43,69 @@ const EmailInput = ({ onSubmit = () => {} }) => {
   );
 
   const handleSubmit = useCallback(
-    async (event) => {
-      event.preventDefault();
-      if (!isValidEmail(email)) {
-        setError('Por favor, insira um email válido.');
-        return;
+  async (event) => {
+    event.preventDefault();
+    
+    // Reset estados
+    setError('');
+    setStatus('');
+    
+    if (!isValidEmail(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // URL da API do Vercel - note que usamos caminho relativo
+      const response = await fetch(
+        '/api/newsletter',
+        {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Erro na resposta do servidor');
       }
 
-      try {
-        await fetch(
-          'https://script.google.com/macros/s/AKfycbyij5TQ6ZPXxqiFZLvhMdJKfrnQI9GYC3TBZIBRcZIj1B_tC1hhoso2PVhrHNn4OIfRlw/exec',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' },
-            body: JSON.stringify({ email }),
-            mode: 'no-cors', // remover em produção
-          }
-        );
+      const data = await response.json();
 
-        setStatus('Inscrição realizada!');
+      if (data.success) {
+        if (data.emailSent) {
+          setStatus('Inscrição realizada! Em breve você receberá um e-mail de boas-vindas.');
+        } else {
+          setStatus('Inscrição realizada! O e-mail de boas-vindas pode demorar um pouco.');
+        }
         setEmail('');
-        // Aqui você pode chamar onSubmit, se desejar acionar algo externo
-        // onSubmit(email);
-      } catch (error) {
-        setError('Erro ao cadastrar. Tente novamente.');
+        onSubmit(email);
+      } else if (data.error) {
+        setError(data.error || 'Erro ao processar sua inscrição.');
+      } else {
+        setError('Erro desconhecido ao processar sua inscrição.');
       }
-    },
-    [email, isValidEmail]
-  );
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
+      setError('Erro ao cadastrar. Tente novamente em alguns instantes.');
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  [email, isValidEmail, onSubmit]
+);
 
   const handleChange = useCallback(
     (e) => {
       setEmail(e.target.value);
-      if (error) {
-        setError('');
-      }
+      if (error) setError('');
+      if (status) setStatus('');
     },
-    [error]
+    [error, status]
   );
 
   return (
@@ -98,24 +125,48 @@ const EmailInput = ({ onSubmit = () => {} }) => {
           aria-label="Insira seu e-mail"
           aria-invalid={!!error}
           aria-describedby={error ? 'email-error' : undefined}
+          disabled={isLoading}
         />
-        <SubmitButton type="submit" aria-label="Enviar email">
+        <SubmitButton 
+          type="submit" 
+          aria-label="Enviar email"
+          disabled={isLoading}
+        >
           <ArrowIcon>
-            <ArrowSVG />
+            {isLoading ? (
+              <div style={{
+                width: '20px', 
+                height: '20px', 
+                border: '2px solid #f3f3f3', 
+                borderTop: '2px solid #3498db', 
+                borderRadius: '50%', 
+                animation: 'spin 1s linear infinite'
+              }} />
+            ) : (
+              <ArrowSVG />
+            )}
           </ArrowIcon>
         </SubmitButton>
       </InputContainer>
+      
       {error && (
         <ErrorMessage id="email-error" role="alert">
           {error}
         </ErrorMessage>
       )}
+      
       {status && !error && (
         <div
           style={{
             color: 'green',
+            background: '#fff',
+            border: '1px solid #000',
             marginTop: '5px',
             fontFamily: 'Roboto Mono, monospace',
+            fontSize: '14px',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            display: 'inline-block',
           }}
         >
           {status}
