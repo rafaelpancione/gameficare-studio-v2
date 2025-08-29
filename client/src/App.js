@@ -25,7 +25,7 @@ const SobrePage = lazy(() => import('./pages/SobrePage'));
 const ProjetosPage = lazy(() => import('./pages/ProjetosPage'));
 const ContatoPage = lazy(() => import('./pages/ContatoPage'));
 const JornadaGameficare = lazy(() => import('./pages/JornadaGameficare'));
-const UnsubscribePage = lazy(() => import('./pages/UsubscribePage'));
+const UnsubscribePage = lazy(() => import('./pages/UnsubscribePage'));
 
 function AppContent() {
   const { setConsent, hasConsented } = useCookieConsent();

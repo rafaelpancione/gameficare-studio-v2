@@ -1,112 +1,58 @@
+// /api/newsletter.js
+// Endpoint de cadastro que chama o Apps Script (POST) e retorna JSON + status
+
 export default async function handler(req, res) {
-  // Configurar CORS
-  res.setHeader('Access-Control-Allow-Origin', 'https://www.gameficare.com.br');
+  // CORS (produçao + local opcional)
+  const origin = req.headers.origin || '';
+  const allowed = ['https://www.gameficare.com.br', 'http://localhost:3000'];
+  const allowOrigin = allowed.includes(origin) ? origin : allowed[0];
+
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Responder imediatamente para requisições OPTIONS (preflight)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  // Permitir apenas requisições POST
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false,
-      error: 'Método não permitido' 
-    });
+    return res.status(405).json({ success: false, error: 'Método não permitido' });
   }
 
   try {
-    console.log('Recebida requisição para /api/newsletter');
-    
-    // Ler o body manualmente
-    let body = '';
-    for await (const chunk of req) {
-      body += chunk.toString();
+    const gasUrl = process.env.GAS_EXEC_URL;
+    if (!gasUrl) {
+      return res.status(500).json({ success: false, error: 'GAS_EXEC_URL não configurada' });
     }
 
-    console.log('Body recebido:', body);
+    // Body pode vir parseado ou como stream (depende do runtime)
+    const body = (req.body && Object.keys(req.body).length) ? req.body : await readStream(req);
+    const email = String(body.email || '').trim().toLowerCase();
 
-    // Tentar parsear como JSON
-    let parsedBody;
-    let email;
-
-    try {
-      parsedBody = JSON.parse(body);
-      email = parsedBody.email;
-    } catch (parseError) {
-      console.error('Erro ao fazer parse do JSON:', parseError.message);
-      return res.status(400).json({
-        success: false,
-        error: 'JSON inválido no corpo da requisição'
-      });
-    }
-
-    // Validação do e-mail
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      console.log('Email inválido recebido:', email);
-      return res.status(400).json({ 
-        success: false,
-        error: 'E-mail inválido' 
-      });
+      return res.status(400).json({ success: false, error: 'E-mail inválido' });
     }
 
-    console.log('Email válido recebido:', email);
-    console.log('Fazendo requisição para Google Apps Script...');
-    
-    // Fazer a requisição para o Google Apps Script
-    const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbyKAFrZ3-vwxY-QLdHdH0K8rOnV-UXZkIxBzSMpSdYIUAWQFlqt_cZtuQaEJAh0h5qmcQ/exec',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      }
-    );
+    const resp = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
 
-    console.log('Resposta recebida do Google Apps Script. Status:', response.status);
-
-    const responseText = await response.text();
-    console.log('Conteúdo da resposta do GAS (início):', responseText.substring(0, 200));
-
-    // Verificar se a resposta é HTML (problema conhecido do Google Apps Script)
-    const isHtmlResponse = responseText.trim().toLowerCase().startsWith('<!doctype html') || 
-                          responseText.includes('<html') || 
-                          responseText.includes('<!DOCTYPE html');
+    const text = await resp.text();
 
     let data;
-    if (isHtmlResponse) {
-      // O GAS retornou HTML mas com status 200 - assumimos que funcionou
-      console.log('GAS retornou HTML mas com status 200. Assumindo sucesso.');
-      data = { success: true, emailSent: true };
-    } else {
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error('Erro ao fazer parse da resposta JSON do GAS:', e);
-        throw new Error('Resposta inválida do Google Apps Script');
-      }
-    }
-    
-    console.log('Dados processados:', data);
-    
-    // Retornar a resposta para o frontend
-    res.status(200).json({
-      success: true,
-      emailSent: data.emailSent || true, // Assume true se não especificado
-      message: 'E-mail processado com sucesso'
-    });
-    
+    try { data = JSON.parse(text); }
+    catch { data = { success: false, error: 'Resposta inválida do Apps Script', raw: text }; }
+
+    const status = data.success ? 200 : (resp.ok ? 400 : resp.status || 500);
+    return res.status(status).json(data);
   } catch (error) {
-    console.error('Erro detalhado na API:', error.message);
-    
-    // Retornar erro específico para o frontend
-    res.status(500).json({ 
-      success: false,
-      error: error.message || 'Erro interno do servidor'
-    });
+    console.error('Erro detalhado na API newsletter:', error);
+    return res.status(500).json({ success: false, error: 'Erro interno do servidor' });
   }
+}
+
+async function readStream(req) {
+  let body = '';
+  for await (const chunk of req) body += chunk.toString();
+  try { return JSON.parse(body); } catch { return {}; }
 }
