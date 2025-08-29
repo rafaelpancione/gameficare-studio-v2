@@ -102,26 +102,26 @@ const UnsubscribePage = () => {
       return;
     }
 
-    // Fazer requisição para o Google Apps Script
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyCVRGXQ3Q4buu3y7FdUZdU5Jfzb23PenY8tBU24bgId3p7DboOoykpgB7oyOCkir15zA/exec';
-    const url = `${scriptUrl}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
-    
-    fetch(url)
-      .then(response => response.text())
-      .then(data => {
-        if (data.includes('sucesso')) {
-          setStatus('success');
-          setMessage('Descadastro realizado com sucesso! Você não receberá mais nossas newsletters.');
-        } else {
-          setStatus('error');
-          setMessage('Não foi possível processar seu descadastro. Entre em contato conosco.');
-        }
-      })
-      .catch(error => {
+    // Usar o proxy da Vercel
+  const proxyUrl = '/api/proxy'; // URL relativa para o proxy
+  const url = `${proxyUrl}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+
+  fetch(url)
+    .then(response => response.text())
+    .then(data => {
+      if (data.includes('sucesso')) {
+        setStatus('success');
+        setMessage('Descadastro realizado com sucesso! Você não receberá mais nossas newsletters.');
+      } else {
         setStatus('error');
-        setMessage('Erro de conexão. Tente novamente mais tarde.');
-      });
-  }, [searchParams]);
+        setMessage('Não foi possível processar seu descadastro. Entre em contato conosco.');
+      }
+    })
+    .catch(error => {
+      setStatus('error');
+      setMessage('Erro de conexão. Tente novamente mais tarde.');
+    });
+}, [searchParams]);
 
   return (
     <ThemeProvider theme={theme}>
