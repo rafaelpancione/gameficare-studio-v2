@@ -89,7 +89,7 @@ const Button = styled.button`
 
 const UnsubscribePage = () => {
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState('loading');
+  const [status, setStatus] = useState('loading'); // loading | success | error
   const [message, setMessage] = useState('Processando seu descadastro...');
 
   useEffect(() => {
@@ -102,20 +102,39 @@ const UnsubscribePage = () => {
       return;
     }
 
-    // Chama o proxy da Vercel que retorna JSON padronizado
     const proxyUrl = '/api/proxy';
     const url = `${proxyUrl}?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
 
     fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
       .then(async (response) => {
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data && data.success) {
+        // SEMPRE tente ler o corpo como JSON, mesmo em 4xx/5xx
+        let data = null;
+        try {
+          data = await response.json();
+        } catch {
+          data = null;
+        }
+
+        // Se veio JSON com success → respeite.
+        if (data && typeof data === 'object' && 'success' in data) {
+          if (data.success) {
+            setStatus('success');
+            setMessage('Descadastro realizado com sucesso! Você não receberá mais nossas newsletters.');
+          } else {
+            const err = data.error || data.message || `Não foi possível processar seu descadastro. (HTTP ${response.status})`;
+            setStatus('error');
+            setMessage(err);
+          }
+          return;
+        }
+
+        // Sem JSON: mensagens amigáveis conforme status HTTP
+        if (response.ok) {
           setStatus('success');
-          setMessage('Descadastro realizado com sucesso! Você não receberá mais nossas newsletters.');
+          setMessage('Descadastro realizado com sucesso!');
         } else {
-          const err = (data && (data.error || data.message)) || 'Não foi possível processar seu descadastro.';
           setStatus('error');
-          setMessage(err);
+          setMessage(`Não foi possível processar seu descadastro. (HTTP ${response.status})`);
         }
       })
       .catch(() => {
@@ -129,7 +148,9 @@ const UnsubscribePage = () => {
       <Container>
         <Content>
           <Title>Descadastrar Newsletter</Title>
+
           {status === 'loading' && <Message>Processando seu descadastro...</Message>}
+
           {status === 'success' && (
             <>
               <Status success>✅ {message}</Status>
@@ -138,6 +159,7 @@ const UnsubscribePage = () => {
               </Button>
             </>
           )}
+
           {status === 'error' && <Status>❌ {message}</Status>}
         </Content>
       </Container>
