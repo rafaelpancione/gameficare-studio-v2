@@ -170,6 +170,9 @@ export const MenuItem = styled(Link)`
   margin-left: ${({ theme }) => theme.spacing?.(2.5) || '20px'};
   position: relative;
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
   &:hover {
     color: ${({ theme }) => theme.colors?.yellow || 'var(--yellow)'};
@@ -203,5 +206,21 @@ export const MenuItem = styled(Link)`
     &:after {
       display: none;
     }
+  }
+`;
+
+export const ExternalLinkIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  ${MenuItem}:hover & {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 6px;
   }
 `;

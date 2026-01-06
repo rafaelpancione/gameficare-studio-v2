@@ -12,14 +12,20 @@ import {
   HamburgerButton,
   CloseButton,
   Overlay,
+  ExternalLinkIcon,
 } from './styles';
 import logoSvg from '../../../assets/images/logo.svg';
 import { Link } from 'react-router-dom';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiExternalLink } from 'react-icons/fi';
 import { FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const Header = ({ menuItems = [], tooltipText = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Função para detectar links externos
+  const isExternalLink = (url) => {
+    return url.startsWith('http://') || url.startsWith('https://');
+  };
 
   const handleMobileMenu = () => {
     setIsMobileMenuOpen((prevState) => {
@@ -32,6 +38,22 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     document.body.style.overflow = 'auto';
+  };
+
+  const handleMenuItemKeyDown = (e, item) => {
+    // Handle keyboard navigation for menu items
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (isExternalLink(item.link)) {
+        // For external links, open in new tab
+        window.open(item.link, '_blank', 'noopener,noreferrer');
+        // Close mobile menu if open
+        if (isMobileMenuOpen) {
+          closeMobileMenu();
+        }
+      }
+      // For internal links, let React Router handle navigation
+    }
   };
 
   const handleOverlayKeyDown = (e) => {
@@ -49,24 +71,47 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
         </LogoContainer>
 
         {/* Menu Desktop */}
-        <Menu $isMobile={false}>
-          {menuItems.map((item) => (
-            <MenuItem
-              as={Link}
-              to={item.link}
-              key={item.label}
-              onClick={closeMobileMenu}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
+        <Menu $isMobile={false} role="navigation" aria-label="Menu principal">
+          {menuItems.map((item) => {
+            const external = isExternalLink(item.link);
+            return external ? (
+              <MenuItem
+                as="a"
+                href={item.link}
+                key={item.label}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${item.label} (abre em nova aba)`}
+                onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                tabIndex="0"
+              >
+                {item.label}
+                <ExternalLinkIcon aria-hidden="true">
+                  <FiExternalLink size={12} />
+                </ExternalLinkIcon>
+              </MenuItem>
+            ) : (
+              <MenuItem
+                as={Link}
+                to={item.link}
+                key={item.label}
+                onClick={closeMobileMenu}
+                onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                tabIndex="0"
+                aria-label={item.label}
+              >
+                {item.label}
+              </MenuItem>
+            );
+          })}
         </Menu>
 
         {/* Botão Hambúrguer */}
         <HamburgerButton
           onClick={handleMobileMenu}
-          aria-label="Abrir menu"
+          aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
           aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-menu"
         >
           <FiMenu size={24} />
         </HamburgerButton>
@@ -80,8 +125,18 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
           role="button"
           aria-label="Fechar menu"
         />
-        <MobileMenuWrapper $isOpen={isMobileMenuOpen}>
-          <CloseButton onClick={handleMobileMenu} aria-label="Fechar menu">
+        <MobileMenuWrapper 
+          $isOpen={isMobileMenuOpen} 
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-menu-title"
+        >
+          <CloseButton 
+            onClick={handleMobileMenu} 
+            aria-label="Fechar menu"
+            autoFocus={isMobileMenuOpen}
+          >
             <FiX size={24} />
           </CloseButton>
           <div
@@ -98,17 +153,47 @@ const Header = ({ menuItems = [], tooltipText = '' }) => {
               style={{ width: 64, height: 'auto' }}
             />
           </div>
-          <Menu $isMobile={true}>
-            {menuItems.map((item) => (
-              <MenuItem
-                as={Link}
-                to={item.link}
-                key={item.label}
-                onClick={closeMobileMenu}
-              >
-                {item.label}
-              </MenuItem>
-            ))}
+          <h2 id="mobile-menu-title" style={{ 
+            position: 'absolute', 
+            left: '-9999px',
+            fontSize: '1px'
+          }}>
+            Menu de navegação
+          </h2>
+          <Menu $isMobile={true} role="navigation" aria-label="Menu mobile">
+            {menuItems.map((item) => {
+              const external = isExternalLink(item.link);
+              return external ? (
+                <MenuItem
+                  as="a"
+                  href={item.link}
+                  key={item.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${item.label} (abre em nova aba)`}
+                  onClick={closeMobileMenu}
+                  onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                  tabIndex="0"
+                >
+                  {item.label}
+                  <ExternalLinkIcon aria-hidden="true">
+                    <FiExternalLink size={14} />
+                  </ExternalLinkIcon>
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  as={Link}
+                  to={item.link}
+                  key={item.label}
+                  onClick={closeMobileMenu}
+                  onKeyDown={(e) => handleMenuItemKeyDown(e, item)}
+                  tabIndex="0"
+                  aria-label={item.label}
+                >
+                  {item.label}
+                </MenuItem>
+              );
+            })}
           </Menu>
           {/* Footer com social icons acima do ano */}
           <div

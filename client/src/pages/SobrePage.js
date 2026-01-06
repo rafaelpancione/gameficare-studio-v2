@@ -218,6 +218,7 @@ function Sobre() {
           { label: 'Home', link: '/' },
           { label: 'Sobre', link: '/sobre' },
           { label: 'Projetos', link: '/projetos' },
+          { label: 'Blog', link: 'https://blog.gameficare.com.br' },
           { label: 'Contato', link: '/contato' },
         ]}
         tooltipText="Oi, tudo bem?!"
